@@ -59,6 +59,28 @@ Audio is captured via Web Audio API (16kHz mono PCM), streamed through Socket.IO
 - AWS credentials configured
 
 ### Setup
+#### For Windows
+
+```bash
+npm install
+
+REM Method A: AWS Profile
+set AWS_PROFILE=your-profile
+
+REM Method B: Access Keys
+set AWS_ACCESS_KEY_ID=xxx
+set AWS_SECRET_ACCESS_KEY=xxx
+
+REM Optional: Listen on all interfaces
+set HOST=0.0.0.0
+
+REM Build and run
+npm run build
+npm start
+
+REM Or development mode
+npm run dev
+```
 
 ```bash
 npm install
