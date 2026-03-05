@@ -38,3 +38,9 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE
+screenshots/
