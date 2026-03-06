@@ -1,0 +1,276 @@
+# Source Code Description - Amazon Nova 2 Sonic Voice Assistant
+
+## Overview
+This is a real-time conversational AI voice assistant built with Amazon Nova 2 Sonic, AWS's speech-to-speech foundation model. The application enables natural voice conversations with AI through bidirectional streaming, supporting features like turn-taking, barge-in, tool calling, and crossmodal interaction (voice + text).
+
+## Architecture
+The src folder contains the core TypeScript implementation with three main components:
+1. **Client Layer** - Manages bidirectional streaming with AWS Bedrock
+2. **Server Layer** - Express/Socket.IO server handling WebSocket connections
+3. **Tools System** - Extensible function calling framework for AI capabilities
+
+---
+
+## Core Files
+
+### src/client.ts (1,129 lines)
+**Purpose**: AWS Bedrock bidirectional streaming client for Nova 2 Sonic
+
+**Key Classes**:
+- `NovaSonicBidirectionalStreamClient`: Main client managing AWS Bedrock connections
+  - Handles multiple concurrent streaming sessions
+  - Manages session lifecycle (create, stream, close)
+  - Processes bidirectional event streams (audio in/out, text, tool calls)
+  - Implements async tool execution without blocking responses
+  - Supports session-specific inference configs and turn detection
+
+- `StreamSession`: Individual conversation session wrapper
+  - Audio buffer queue management (max 200 chunks)
+  - Event handler registration per session
+  - Session setup (system prompt, audio config, voice selection)
+  - Audio streaming with backpressure handling
+  - Text input support for crossmodal interaction
+  - Graceful session cleanup
+
+**Key Features**:
+- Bidirectional streaming via AWS SDK's InvokeModelWithBidirectionalStreamCommand
+- Async iterator pattern for event streaming
+- Tool registry integration for function calling
+- Session activity tracking and automatic cleanup
+- Support for multiple AWS regions
+- Barge-in detection and handling
+- RxJS-based event signaling
+
+### src/server.ts (500+ lines)
+**Purpose**: Express HTTP server with Socket.IO for WebSocket communication
+
+**Key Responsibilities**:
+- Serves static files from public directory
+- Manages Socket.IO connections for real-time audio streaming
+- Maps socket connections to Nova Sonic sessions
+- Handles session states (INITIALIZING, READY, ACTIVE, CLOSED)
+- Implements cleanup logic for disconnected clients
+- Provides health check and tools API endpoints
+
+**Socket Events Handled**:
+- `initializeConnection`: Create new session with config
+- `startNewChat`: Reset and start fresh conversation
+- `promptStart`: Configure voice and output sample rate
+- `systemPrompt`: Set AI personality/instructions
+- `audioStart`: Begin audio streaming (triggers AWS connection)
+- `audioInput`: Stream audio chunks from browser
+- `textInput`: Send text messages (typing mode)
+- `stopAudio`: Graceful session termination
+- `disconnect`: Cleanup on client disconnect
+
+**Session Management**:
+- Per-region Bedrock client pooling
+- Session state tracking and validation
+- Automatic cleanup of inactive sessions (5 min timeout)
+- Cleanup-in-progress tracking to prevent race conditions
+
+### src/consts.ts
+**Purpose**: Configuration constants and defaults
+
+**Configurations**:
+- AWS settings (profile, regions, model ID)
+- Tool model configs (reasoning, transcript correction)
+- Inference defaults (temperature, topP, maxTokens)
+- Audio configs (sample rates, encoding, voice IDs)
+- Turn detection settings
+- Tool configuration (max result length)
+
+### src/types.ts
+**Purpose**: Core type definitions
+
+**Key Types**:
+- `InferenceConfig`: Model parameters (temperature, topP, maxTokens)
+- `TurnDetectionConfig`: Voice activity detection sensitivity
+- `ToolChoice`: Tool selection strategy (auto/any/specific)
+- `ContentType`, `AudioType`, `TextMediaType`: Content format types
+- Audio/Text configuration interfaces
+
+---
+
+## Tools System (src/tools/)
+
+### src/tools/Tool.ts
+**Purpose**: Tool framework and registry
+
+**Interfaces**:
+- `Tool`: Base interface for all tools
+  - name, description, inputSchema (JSON Schema)
+  - execute(params, context) method
+- `ToolSpec`: AWS Nova Sonic tool specification format
+- `ToolExecutionContext`: Session context passed to tools
+
+**ToolRegistry Class**:
+- Register/retrieve tools by name (case-insensitive)
+- Generate tool specs for Nova Sonic API
+- Execute tools with parameter validation
+- Pass session inference config to tools
+
+### src/tools/index.ts
+**Purpose**: Tool exports and default registry setup
+
+**Default Tools Registered**:
+1. DateTimeTool
+2. WeatherTool
+3. LocationSearchTool
+4. ReasoningTool
+5. WikipediaTool
+6. TranscriptCorrectionTool
+
+### Individual Tools
+
+#### src/tools/DateTimeTool.ts
+**Capabilities**:
+- Get current time in any timezone
+- Convert time between timezones
+- Calculate future/past dates (add/subtract time)
+- Find difference between dates
+- Timezone alias support (PST, EST, Tokyo, etc.)
+- Human-readable date formatting
+
+**Actions**: current, convert, calculate, difference
+
+#### src/tools/WeatherTool.ts
+**Capabilities**:
+- Current weather conditions via Open-Meteo API
+- 7-day weather forecast
+- WMO weather code interpretation
+- Temperature, humidity, cloud cover data
+
+**Modes**: current, forecast
+
+#### src/tools/LocationSearchTool.ts
+**Capabilities**:
+- Geocoding via Open-Meteo API
+- Search cities/countries by name
+- Returns coordinates (latitude/longitude)
+- Multi-language support
+
+#### src/tools/ReasoningTool.ts
+**Capabilities**:
+- Complex reasoning via AWS Bedrock Converse API
+- Uses Claude Sonnet 4 or Nova models
+- Task-specific prompting (reason, analyze, solve, explain, verify, brainstorm, summarize)
+- Supports extended thinking and web grounding (Nova models)
+- Concise responses optimized for voice output
+
+**Use Cases**: Math problems, fact-checking, multi-step analysis, creative brainstorming
+
+#### src/tools/WikipediaTool.ts
+**Capabilities**:
+- Search Wikipedia articles
+- Get article summaries (2-3 sentences)
+- Retrieve full article content
+- Multilingual query support
+- Content truncation for token efficiency
+
+**Modes**: search, summary, content
+
+#### src/tools/TranscriptCorrectionTool.ts
+**Capabilities**:
+- Auto-correct speech recognition errors
+- Phonetic similarity analysis
+- Context-aware suggestions using conversation history
+- Uses LLM (Claude/Nova) for correction suggestions
+
+**Use Cases**: Fix misheard names, places, technical terms
+
+---
+
+## Event Types (src/types/events.ts)
+
+**Event Categories**:
+1. **Session Events**: sessionStart, sessionEnd
+2. **Content Events**: contentStart, contentEnd
+3. **Audio Events**: audioInput, audioOutput
+4. **Text Events**: textInput, textOutput
+5. **Tool Events**: toolUse, toolResult
+6. **Prompt Events**: promptStart, promptEnd
+7. **Error Events**: streamError, modelStreamErrorException
+8. **Special Events**: bargeIn, usageEvent, completionStart, streamComplete
+
+**Event Handler System**:
+- Type-safe event handler map
+- Support for specific event handlers and "any" handler
+- Session-scoped event dispatching
+
+---
+
+## Key Design Patterns
+
+1. **Bidirectional Streaming**: Async iterator pattern for AWS Bedrock streaming
+2. **Session Management**: Map-based session tracking with lifecycle management
+3. **Event-Driven Architecture**: RxJS subjects for signaling and coordination
+4. **Tool Registry Pattern**: Extensible plugin system for AI capabilities
+5. **Backpressure Handling**: Audio queue with max size and batch processing
+6. **Graceful Degradation**: Timeout-based cleanup and force-close fallbacks
+7. **Multi-Region Support**: Region-specific client pooling
+8. **Context Passing**: Session inference config propagated to tools
+
+---
+
+## Data Flow
+
+1. **Browser** → Audio capture (16kHz PCM) → Socket.IO → **Server**
+2. **Server** → Buffer audio → AWS Bedrock streaming → **Nova 2 Sonic**
+3. **Nova 2 Sonic** → Audio/text/tool events → **Server** → Socket.IO → **Browser**
+4. **Tool Execution**: Nova requests tool → Async execution → Result sent back → Nova incorporates into response
+
+---
+
+## Dependencies
+
+**AWS SDK**:
+- @aws-sdk/client-bedrock-runtime: Bedrock API client
+- @smithy/node-http-handler: HTTP/2 handler for streaming
+
+**Server**:
+- express: HTTP server
+- socket.io: WebSocket communication
+- rxjs: Reactive event handling
+
+**Utilities**:
+- uuid: Session ID generation
+- dotenv: Environment configuration
+
+---
+
+## Configuration Points
+
+1. **AWS Credentials**: Environment variables or AWS credential chain
+2. **Region Selection**: Configurable per session, default ap-northeast-1
+3. **Voice Selection**: Tiffany (feminine) or Matthew (masculine)
+4. **Inference Config**: Temperature, topP, maxTokens per session
+5. **Turn Detection**: Endpointing sensitivity (HIGH/MEDIUM/LOW)
+6. **Tool Selection**: Enable/disable specific tools per session
+7. **Audio Quality**: Output sample rate (16kHz/24kHz/48kHz)
+
+---
+
+## Error Handling
+
+- Session cleanup timeouts (3-5 seconds)
+- Force-close fallback for stuck sessions
+- Tool execution error recovery
+- Stream error event propagation
+- Cleanup-in-progress tracking to prevent race conditions
+- Inactive session auto-cleanup (5 min timeout)
+
+---
+
+## Performance Optimizations
+
+- Audio buffer queue with max size (200 chunks)
+- Batch audio processing (max 5 chunks per batch)
+- Tool result truncation (20KB limit)
+- Session activity tracking for cleanup
+- HTTP/2 connection pooling
+- Concurrent stream support (max 20)
+
+---
+
+This implementation demonstrates production-ready patterns for building real-time conversational AI with AWS Bedrock, including robust session management, extensible tool calling, and graceful error handling.

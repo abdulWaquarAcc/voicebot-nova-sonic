@@ -81,7 +81,7 @@ npm start
 REM Or development mode
 npm run dev
 ```
-
+#### For Linux/Max
 ```bash
 npm install
 

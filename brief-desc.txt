@@ -1,0 +1,131 @@
+# How the Voice AI App Works (Beginner's Guide)
+
+## Simple Overview
+This app lets you talk to an AI like Amazon Alexa, but using Amazon's Nova 2 Sonic AI model. You speak, it listens, thinks, and speaks back - all in real-time.
+
+## Step-by-Step Flow
+
+### 1. User Clicks Microphone Button
+- **Where**: Browser (public/index.html + public/src/main.js)
+- **What happens**: JavaScript asks for microphone permission
+- **Code**: `navigator.mediaDevices.getUserMedia({ audio: true })`
+
+### 2. Browser Captures Your Voice
+- **Format**: Raw audio (16kHz, 16-bit, mono)
+- **How**: Web Audio API continuously records small chunks (like 0.1 second pieces)
+- **Payload**: Binary audio data (not text yet!)
+
+### 3. Frontend Sends Audio to Backend
+- **Method**: WebSocket connection (Socket.IO)
+- **Event name**: `audioInput`
+- **Payload**: Base64-encoded audio chunks
+- **Code**: `socket.emit('audioInput', audioData)`
+- **Frequency**: Many times per second (continuous streaming)
+
+### 4. Backend Receives Audio
+- **Where**: src/server.ts (Node.js Express server)
+- **What it does**: 
+  - Receives audio chunks via Socket.IO
+  - Converts base64 back to binary audio
+  - Forwards to AWS Bedrock
+
+### 5. Backend Sends to AWS Nova Sonic
+- **Where**: src/client.ts (AWS Bedrock client)
+- **Method**: Bidirectional streaming API
+- **What happens**: 
+  - Streams audio directly to Amazon's AI
+  - No conversion to text first!
+  - AI processes speech directly
+
+### 6. Nova Sonic AI Processes
+- **What it does**:
+  - Understands your speech (built-in speech recognition)
+  - Thinks about response (language understanding)
+  - Generates response speech (built-in text-to-speech)
+  - Can call tools if needed (weather, time, etc.)
+
+### 7. AI Sends Response Back
+- **Format**: Multiple types of data
+- **Audio**: Base64-encoded speech (24kHz, 16-bit)
+- **Text**: Transcript of what AI is saying
+- **Events**: Start/stop signals, tool calls
+
+### 8. Backend Forwards to Frontend
+- **Method**: WebSocket (Socket.IO)
+- **Events**: 
+  - `audioOutput` - AI's voice
+  - `textOutput` - AI's words as text
+  - `toolUse` - When AI uses tools
+
+### 9. Frontend Plays AI Response
+- **Audio**: Converts base64 to audio and plays through speakers
+- **Text**: Shows AI's words on screen in chat bubbles
+- **UI**: Updates interface (thinking indicators, etc.)
+
+## Key Data Formats
+
+### Audio Going In (Your Voice):
+```
+Browser Microphone → 16kHz PCM → Base64 → WebSocket → AWS
+```
+
+### Audio Coming Back (AI Voice):
+```
+AWS → Base64 → WebSocket → Browser → Speakers
+```
+
+### Text (AI's Words):
+```
+AWS → JSON text → WebSocket → Browser → Chat Display
+```
+
+## Tool Calling Example
+
+When you ask "What's the weather?":
+
+1. **Your voice** → AWS Nova Sonic
+2. **AI thinks**: "I need weather data"
+3. **AI calls tool**: `getWeatherTool` with location
+4. **Backend runs tool**: Calls weather API
+5. **Tool result** → Back to AI
+6. **AI speaks**: "It's 72 degrees and sunny"
+7. **You hear**: AI's voice with weather info
+
+## File Responsibilities
+
+### Frontend (Browser):
+- **public/src/main.js**: Captures microphone, plays audio, handles UI
+- **public/index.html**: The webpage you see
+
+### Backend (Server):
+- **src/server.ts**: WebSocket server, manages connections
+- **src/client.ts**: Talks to AWS Bedrock Nova Sonic
+- **src/tools/**: Weather, time, Wikipedia tools
+
+### AWS (Cloud):
+- **Nova Sonic**: The AI brain that understands and speaks
+
+## Connection Flow
+```
+Your Browser ←→ WebSocket ←→ Node.js Server ←→ AWS Bedrock ←→ Nova Sonic AI
+```
+
+## Why This Architecture?
+
+1. **Real-time**: WebSockets allow instant back-and-forth
+2. **Streaming**: Audio flows continuously (not wait-and-send)
+3. **Direct Speech**: No text conversion needed (faster, more natural)
+4. **Tools**: AI can get live data (weather, time, etc.)
+5. **Secure**: Your AWS credentials stay on server, not in browser
+
+## Simple Analogy
+
+Think of it like a phone call:
+- **Your mouth** = Browser microphone
+- **Phone line** = WebSocket connection  
+- **Operator** = Node.js server
+- **Smart person** = Nova Sonic AI
+- **Their mouth** = AI speech output
+- **Your ear** = Browser speakers
+
+The "operator" (server) connects you to the "smart person" (AI), and you have a real-time conversation!
