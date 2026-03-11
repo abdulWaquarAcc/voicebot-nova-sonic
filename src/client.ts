@@ -563,6 +563,7 @@ export class NovaSonicBidirectionalStreamClient {
                   console.log(`Barge-in detected for session ${sessionId}`);
                   this.dispatchEvent(sessionId, 'bargeIn', { interrupted: true });
                 }
+                
                 this.dispatchEvent(sessionId, 'textOutput', jsonResponse.event.textOutput);
               } else if (jsonResponse.event?.audioOutput) {
                 this.dispatchEvent(sessionId, 'audioOutput', jsonResponse.event.audioOutput);
@@ -835,7 +836,7 @@ export class NovaSonicBidirectionalStreamClient {
   }
 
   // Send text input event (for typing mode)
-  public sendTextInputEvent(sessionId: string, textContent: string): void {
+  public async sendTextInputEvent(sessionId: string, textContent: string): Promise<void> {
     const session = this.activeSessions.get(sessionId);
     if (!session) {
       console.error(`No session found for ${sessionId}`);

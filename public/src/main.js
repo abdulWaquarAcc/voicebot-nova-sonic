@@ -1947,7 +1947,58 @@ socket.on('error', (error) => {
         scrollToBottom();
         return;
     }
+});
+
+// Guardrail violation handler
+socket.on('guardrailViolation', (data) => {
+    console.warn('Guardrail violation:', data);
     
+    hideUserThinkingIndicator();
+    hideAssistantThinkingIndicator();
+    
+    // Show violation message in chat
+    const violationDiv = document.createElement('div');
+    violationDiv.className = `message system guardrail-${data.severity}`;
+    
+    const icon = document.createElement('span');
+    icon.className = 'guardrail-icon';
+    icon.textContent = data.severity === 'high' ? '🛡️' : data.severity === 'medium' ? '⚠️' : 'ℹ️';
+    
+    violationDiv.appendChild(icon);
+    violationDiv.appendChild(document.createTextNode(' ' + data.message));
+    
+    chatContainer.appendChild(violationDiv);
+    scrollToBottom();
+});
+
+// Escalation needed handler
+socket.on('escalationNeeded', (data) => {
+    console.log('Escalation needed:', data);
+    
+    hideUserThinkingIndicator();
+    hideAssistantThinkingIndicator();
+    
+    // Show escalation message in chat
+    const escalationDiv = document.createElement('div');
+    escalationDiv.className = 'message system escalation';
+    
+    const icon = document.createElement('span');
+    icon.className = 'escalation-icon';
+    icon.textContent = '👤';
+    
+    escalationDiv.appendChild(icon);
+    escalationDiv.appendChild(document.createTextNode(' ' + data.message));
+    
+    chatContainer.appendChild(escalationDiv);
+    scrollToBottom();
+    
+    // Optionally stop streaming to prepare for agent handoff
+    if (isStreaming) {
+        setTimeout(() => {
+            stopStreaming();
+        }, 3000); // Give time to hear the message
+    }
+// });
     // Stop streaming if session is no longer active
     if (error?.message === 'No active session for audio input' && isStreaming) {
         console.log('Session closed, stopping audio capture');

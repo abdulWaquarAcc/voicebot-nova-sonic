@@ -9,6 +9,7 @@ export { LocationSearchTool } from './LocationSearchTool';
 export { ReasoningTool } from './ReasoningTool';
 export { WikipediaTool } from './WikipediaTool';
 export { TranscriptCorrectionTool } from './TranscriptCorrectionTool';
+export { KnowledgeBaseTool } from './KnowledgeBaseTool';
 
 import { ToolRegistry } from './Tool';
 import { DateTimeTool } from './DateTimeTool';
@@ -17,6 +18,7 @@ import { LocationSearchTool } from './LocationSearchTool';
 import { ReasoningTool } from './ReasoningTool';
 import { WikipediaTool } from './WikipediaTool';
 import { TranscriptCorrectionTool } from './TranscriptCorrectionTool';
+import { KnowledgeBaseTool } from './KnowledgeBaseTool';
 
 /**
  * Creates a ToolRegistry with all default tools registered
@@ -29,5 +31,6 @@ export function createDefaultToolRegistry(): ToolRegistry {
     registry.register(ReasoningTool);
     registry.register(WikipediaTool);
     registry.register(TranscriptCorrectionTool);
+    registry.register(KnowledgeBaseTool);
     return registry;
 }

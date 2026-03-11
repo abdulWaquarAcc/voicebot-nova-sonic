@@ -525,6 +525,72 @@ html, body {
 .message.assistant { background: var(--bg-input); color: var(--text-primary); align-self: flex-start; border-bottom-left-radius: 4px; }
 .message.system { background: transparent; color: var(--text-secondary); align-self: center; text-align: center; }
 
+/* Guardrail violation messages */
+.message.guardrail-high {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--error);
+    align-self: center;
+    max-width: 90%;
+}
+
+.message.guardrail-medium {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--warning);
+    align-self: center;
+    max-width: 90%;
+}
+
+.message.guardrail-low {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--primary);
+    align-self: center;
+    max-width: 90%;
+}
+
+.message.escalation {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0.1) 100%);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--primary);
+    align-self: center;
+    max-width: 90%;
+}
+
+.guardrail-icon, .escalation-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
 /* Session timeout indicators */
 .session-warning {
     display: flex;

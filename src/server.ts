@@ -5,6 +5,8 @@ import { Server } from 'socket.io';
 import { NovaSonicBidirectionalStreamClient, StreamSession } from './client';
 import { Buffer } from 'node:buffer';
 import { AWSConfig } from './consts';
+import { GuardrailsService } from './lib/GuardrailsService';
+import { ViolationType } from './config/guardrails';
 
 const DEFAULT_REGION = process.env.AWS_REGION || AWSConfig.defaultRegion;
 
@@ -42,6 +44,9 @@ function getClientForRegion(region: string): NovaSonicBidirectionalStreamClient 
 
 // Initialize default region client
 const defaultClient = getClientForRegion(DEFAULT_REGION);
+
+// Initialize guardrails service
+const guardrailsService = GuardrailsService.getInstance();
 
 // Track active sessions per socket
 const socketSessions = new Map<string, StreamSession>();
@@ -149,6 +154,18 @@ function setupSessionEventHandlers(session: StreamSession, socket: any) {
 
     session.onEvent('textOutput', (data) => {
         console.log('Text output:', data);
+        
+        // Check assistant response with guardrails
+        const guardrailResult = guardrailsService.checkAssistantResponse(data.content || '', socket.id);
+        
+        if (!guardrailResult.allowed) {
+            console.warn(`Assistant response blocked: ${guardrailResult.violationType}`);
+            // Truncate if too long
+            if (guardrailResult.violationType === ViolationType.RESPONSE_TOO_LONG) {
+                data.content = data.content?.substring(0, 500) + '...';
+            }
+        }
+        
         socket.emit('textOutput', data);
     });
 
@@ -399,6 +416,47 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            // Apply guardrails to user input
+            const guardrailResult = guardrailsService.checkUserInput(data.content, socket.id);
+            
+            if (!guardrailResult.allowed) {
+                console.warn(`User input blocked: ${guardrailResult.violationType} - ${guardrailResult.details}`);
+                
+                // Send guardrail message back to user
+                socket.emit('guardrailViolation', {
+                    type: guardrailResult.violationType,
+                    message: guardrailResult.message,
+                    severity: guardrailResult.severity
+                });
+                
+                // For high severity, also send as text output so user hears it
+                if (guardrailResult.severity === 'high' || guardrailResult.severity === 'medium') {
+                    socket.emit('textOutput', {
+                        role: 'ASSISTANT',
+                        content: guardrailResult.message
+                    });
+                }
+                
+                return;
+            }
+
+            // Check if escalation is needed
+            if (guardrailResult.shouldEscalate) {
+                console.log(`Escalation triggered for session ${socket.id}`);
+                socket.emit('escalationNeeded', {
+                    message: guardrailResult.message,
+                    reason: guardrailResult.details
+                });
+                
+                // Still process the input but flag for human review
+                socket.emit('textOutput', {
+                    role: 'ASSISTANT',
+                    content: guardrailResult.message
+                });
+                
+                return;
+            }
+
             const client = socketClients.get(socket.id) || defaultClient;
             const currentState = sessionStates.get(socket.id);
 
@@ -481,6 +539,9 @@ io.on('connection', (socket) => {
     socket.on('disconnect', async () => {
         console.log('Client disconnected:', socket.id);
         clearInterval(connectionInterval);
+
+        // Reset guardrails rate limit for this session
+        guardrailsService.resetRateLimit(socket.id);
 
         const session = socketSessions.get(socket.id);
         const client = socketClients.get(socket.id) || defaultClient;

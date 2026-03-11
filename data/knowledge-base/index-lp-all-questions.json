@@ -1,0 +1,434 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-10T10:00:00Z",
+  "categories": [
+    "outage",
+    "service",
+    "connection",
+    "payment",
+    "meter"
+  ],
+  "entries": [
+    {
+      "id": "outage-001",
+      "title": "How do I report a power outage?",
+      "content": "You can report an outage by calling our contact center and selecting the \"Report an Outage\" option from the menu.",
+      "category": "outage",
+      "tags": ["outage", "report", "power", "emergency"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 1
+      }
+    },
+    {
+      "id": "outage-002",
+      "title": "What information do I need to report an outage?",
+      "content": "You may need: Your name, Service address, Account number (if available), Description of the issue.",
+      "category": "outage",
+      "tags": ["outage", "report", "information", "requirements"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 2
+      }
+    },
+    {
+      "id": "outage-003",
+      "title": "How can I check the status of a reported outage?",
+      "content": "You can check outage status through the automated system or speak with an agent for updates.",
+      "category": "outage",
+      "tags": ["outage", "status", "check", "updates"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 3
+      }
+    },
+    {
+      "id": "outage-004",
+      "title": "How long will it take to restore power?",
+      "content": "Restoration times vary depending on the cause and severity of the outage. You will receive an estimated restoration time if available.",
+      "category": "outage",
+      "tags": ["outage", "restoration", "time", "estimate"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 4
+      }
+    },
+    {
+      "id": "outage-005",
+      "title": "Should I report an outage if my neighbors also have no power?",
+      "content": "Yes. Even if neighbors are affected, reporting helps us confirm the scope of the outage.",
+      "category": "outage",
+      "tags": ["outage", "report", "neighbors", "scope"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 5
+      }
+    }
+,
+    {
+      "id": "outage-006",
+      "title": "What should I do during a power outage?",
+      "content": "Turn off major appliances, Keep refrigerator/freezer doors closed, Avoid downed power lines, Report the outage immediately.",
+      "category": "outage",
+      "tags": ["outage", "safety", "precautions", "appliances"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 6
+      }
+    },
+    {
+      "id": "outage-007",
+      "title": "How do I report a downed power line?",
+      "content": "Stay away and call immediately to report it as an emergency.",
+      "category": "outage",
+      "tags": ["outage", "emergency", "power line", "safety"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 7
+      }
+    },
+    {
+      "id": "service-001",
+      "title": "How do I transfer my electricity service to a new address?",
+      "content": "Contact us and select the \"Move Service\" option. Provide your current and new service address.",
+      "category": "service",
+      "tags": ["move", "transfer", "service", "relocation"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 8
+      }
+    },
+    {
+      "id": "service-002",
+      "title": "How far in advance should I request a move?",
+      "content": "We recommend contacting us at least 3–5 business days before your move date.",
+      "category": "service",
+      "tags": ["move", "advance notice", "timeline", "planning"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 9
+      }
+    },
+    {
+      "id": "service-003",
+      "title": "How do I disconnect my electricity service?",
+      "content": "Call the contact center and select \"Disconnect Service.\" Provide your account and disconnection date.",
+      "category": "service",
+      "tags": ["disconnect", "service", "termination", "account"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 10
+      }
+    },
+    {
+      "id": "service-004",
+      "title": "Is there a fee for moving or disconnecting service?",
+      "content": "Fees may apply depending on your service agreement.",
+      "category": "service",
+      "tags": ["fees", "charges", "move", "disconnect"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 11
+      }
+    },
+    {
+      "id": "service-005",
+      "title": "Can I schedule a same-day disconnection?",
+      "content": "Same-day requests depend on availability and service policies.",
+      "category": "service",
+      "tags": ["disconnect", "same-day", "scheduling", "availability"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 12
+      }
+    },
+    {
+      "id": "service-006",
+      "title": "What happens to my deposit when I disconnect service?",
+      "content": "Your deposit (if applicable) may be refunded after your final bill is processed.",
+      "category": "service",
+      "tags": ["deposit", "refund", "disconnect", "billing"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 13
+      }
+    },
+    {
+      "id": "connection-001",
+      "title": "How do I request a new electricity connection?",
+      "content": "Call the contact center and select \"New Connection.\" Provide your personal and property details.",
+      "category": "connection",
+      "tags": ["new connection", "setup", "activation", "request"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 14
+      }
+    },
+    {
+      "id": "connection-002",
+      "title": "What documents are required for a new connection?",
+      "content": "You may need: Valid ID, Proof of property ownership or lease agreement, Contact details.",
+      "category": "connection",
+      "tags": ["new connection", "documents", "requirements", "ID"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 15
+      }
+    },
+    {
+      "id": "connection-003",
+      "title": "How long does it take to activate a new connection?",
+      "content": "Activation times vary but are typically completed within a few business days.",
+      "category": "connection",
+      "tags": ["new connection", "activation", "timeline", "processing"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 16
+      }
+    },
+    {
+      "id": "connection-004",
+      "title": "Is a security deposit required for a new connection?",
+      "content": "A deposit may be required depending on credit history and service policies.",
+      "category": "connection",
+      "tags": ["new connection", "deposit", "security", "credit"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 17
+      }
+    },
+    {
+      "id": "connection-005",
+      "title": "Can I apply for a new connection online?",
+      "content": "If online services are available, you may submit your request digitally or through the contact center.",
+      "category": "connection",
+      "tags": ["new connection", "online", "digital", "application"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 18
+      }
+    },
+    {
+      "id": "payment-001",
+      "title": "How can I pay my electricity bill?",
+      "content": "You can: Use Self Assist automated payment, Speak to an agent, Use available online payment options.",
+      "category": "payment",
+      "tags": ["payment", "bill", "methods", "options"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Finance",
+        "questionNumber": 19
+      }
+    },
+    {
+      "id": "payment-002",
+      "title": "What payment methods are accepted?",
+      "content": "Common payment methods include: Credit/debit card, Bank transfer, Online payment systems.",
+      "category": "payment",
+      "tags": ["payment", "methods", "credit card", "bank transfer"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Finance",
+        "questionNumber": 20
+      }
+    },
+    {
+      "id": "payment-003",
+      "title": "Can I set up a payment plan?",
+      "content": "Yes. Speak with an agent to discuss available payment arrangement options.",
+      "category": "payment",
+      "tags": ["payment plan", "arrangement", "installment", "assistance"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Finance",
+        "questionNumber": 21
+      }
+    },
+    {
+      "id": "payment-004",
+      "title": "What happens if I miss a payment?",
+      "content": "Late payments may result in late fees or service disconnection if unpaid.",
+      "category": "payment",
+      "tags": ["late payment", "fees", "disconnection", "consequences"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Finance",
+        "questionNumber": 22
+      }
+    },
+    {
+      "id": "payment-005",
+      "title": "How can I check my current bill amount?",
+      "content": "Use Self Assist to hear your balance or select Agent Assist for detailed billing support.",
+      "category": "payment",
+      "tags": ["bill", "balance", "check", "inquiry"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Finance",
+        "questionNumber": 23
+      }
+    },
+    {
+      "id": "payment-006",
+      "title": "Can I get a copy of my bill?",
+      "content": "Yes. An agent can provide billing details or resend your statement if available.",
+      "category": "payment",
+      "tags": ["bill", "copy", "statement", "duplicate"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Finance",
+        "questionNumber": 24
+      }
+    },
+    {
+      "id": "meter-001",
+      "title": "How do I submit my meter reading?",
+      "content": "Select the \"Submit Meter Reading\" option and provide the reading from your meter.",
+      "category": "meter",
+      "tags": ["meter reading", "submit", "reporting", "usage"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 25
+      }
+    },
+    {
+      "id": "meter-002",
+      "title": "When should I submit my meter reading?",
+      "content": "Submit your reading on or before your scheduled meter reading date.",
+      "category": "meter",
+      "tags": ["meter reading", "deadline", "schedule", "timing"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 26
+      }
+    },
+    {
+      "id": "meter-003",
+      "title": "Where can I find my meter reading?",
+      "content": "Your meter reading is displayed on your electricity meter, typically located outside your property.",
+      "category": "meter",
+      "tags": ["meter reading", "location", "find", "meter"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 27
+      }
+    },
+    {
+      "id": "meter-004",
+      "title": "What happens if I don't submit my meter reading?",
+      "content": "Your bill may be estimated based on previous usage.",
+      "category": "meter",
+      "tags": ["meter reading", "estimate", "billing", "consequences"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 28
+      }
+    },
+    {
+      "id": "meter-005",
+      "title": "Can I correct a submitted meter reading?",
+      "content": "Yes. Contact an agent as soon as possible to correct the information.",
+      "category": "meter",
+      "tags": ["meter reading", "correction", "error", "update"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 29
+      }
+    },
+    {
+      "id": "meter-006",
+      "title": "Why is my bill higher after submitting a meter reading?",
+      "content": "A higher bill may reflect: Increased electricity usage, Previous estimated readings being adjusted, Seasonal consumption changes.",
+      "category": "meter",
+      "tags": ["meter reading", "bill", "high usage", "estimate adjustment"],
+      "source": "LP Next Gen Contact Help Center",
+      "lastUpdated": "2026-03-10T10:00:00Z",
+      "metadata": {
+        "author": "Customer Service",
+        "department": "Operations",
+        "questionNumber": 30
+      }
+    }
+  ]
+}

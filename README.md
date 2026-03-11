@@ -141,3 +141,33 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 ## License
 
 This library is licensed under the MIT-0 License. See the [LICENSE](LICENSE) file.
+
+
+
+
+
+
+## Amazon Nova Sonic ##
+1. Unified Speech Model: Combines STT (Speech-to-Text), LLM (Large Language Model), TTS (Text-to-Speech) into one model, eliminating latency from chaining separate services.
+2. Emotion-Aware Responses: Adapts tone and intonation based on how the caller sounds — stressed, calm, or urgent.
+3. Built-in Tool Use & RAG: Supports function calling and enterprise data grounding for real, context-aware answers.
+
+## Amazon Nova 2 Sonic ##
+1. Polyglot Voices: Single voices fluidly switch languages mid-conversation — English, Hindi, French, Spanish, and more.
+2. Async Tool Calling: Fetches external data in the background while continuing to respond — no awkward pauses.
+3. Telephony-Grade Accuracy: Handles accents, background noise, and low-quality 8KHz phone audio with improved robustness.
+
+## Amazon Connect AI Agent ##
+1. Full Contact Center Platform: Manages voice, chat, email, and SMS channels out of the box — not just an API model.
+2. Human + AI Collaboration: AI handles background tasks in real-time while human agents focus on complex customer needs.
+3. Built-in Observability: Tracks handle time, hand-off rates, and conversation turns with full audit-trail transparency.
+
+
+us esas1 = s3 - lpnextgencss
+knowledge base - faq (3 docs - 10 ques each = total 30 questions)
+
+
+## How to update knowledge base
+Modify
+Main content for kb: data\knowledge-base\index.json
+Configuration: src\config\knowledge-base.ts
