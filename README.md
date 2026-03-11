@@ -171,3 +171,11 @@ knowledge base - faq (3 docs - 10 ques each = total 30 questions)
 Modify
 Main content for kb: data\knowledge-base\index.json
 Configuration: src\config\knowledge-base.ts
+
+
+npm install
+
+aws configure
+
+npm run build
+npm start
