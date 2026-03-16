@@ -32,6 +32,7 @@ Nova 2 Sonic supports asynchronous function calling — the model can invoke too
 | Location Search | Find places and coordinates |
 | Reasoning | Extended thinking for complex questions |
 | Transcript Correction | Fix ASR transcription errors |
+| Translation | Translate user input from any language to English |
 
 
 ## Architecture
