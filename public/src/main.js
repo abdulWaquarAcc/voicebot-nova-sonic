@@ -35,7 +35,7 @@ const audioBufferValue = document.getElementById('audio-buffer-value');
 const customSelects = document.querySelectorAll('.custom-select');
 
 // Theme
-let isDarkMode = true;
+let isDarkMode = false;
 
 // Chat history management
 let chat = { history: [] };
@@ -91,7 +91,7 @@ const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
 
 // Configuration state (defaults loaded from server)
 let config = {
-    awsRegion: 'ap-northeast-1',
+    awsRegion: 'us-east-1',
     systemPrompt: '',
     voiceId: 'tiffany',
     responseTiming: 'medium',
@@ -629,7 +629,7 @@ function setToolsDisabled(disabled) {
 
 // Theme toggle
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedTheme = localStorage.getItem('theme') || 'light';
     isDarkMode = savedTheme === 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
