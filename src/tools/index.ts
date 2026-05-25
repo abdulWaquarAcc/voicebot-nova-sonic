@@ -10,6 +10,7 @@ export { ReasoningTool } from './ReasoningTool';
 export { WikipediaTool } from './WikipediaTool';
 export { TranscriptCorrectionTool } from './TranscriptCorrectionTool';
 export { KnowledgeBaseTool } from './KnowledgeBaseTool';
+// export { BedrockKnowledgeBaseTool } from './BedrockKnowledgeBaseTool';
 export { TranslationTool } from './TranslationTool';
 
 import { ToolRegistry } from './Tool';
@@ -20,6 +21,7 @@ import { ReasoningTool } from './ReasoningTool';
 import { WikipediaTool } from './WikipediaTool';
 import { TranscriptCorrectionTool } from './TranscriptCorrectionTool';
 import { KnowledgeBaseTool } from './KnowledgeBaseTool';
+// // import { BedrockKnowledgeBaseTool } from './BedrockKnowledgeBaseTool';
 import { TranslationTool } from './TranslationTool';
 
 /**
@@ -34,6 +36,7 @@ export function createDefaultToolRegistry(): ToolRegistry {
     registry.register(WikipediaTool);
     registry.register(TranscriptCorrectionTool);
     registry.register(KnowledgeBaseTool);
+    // registry.register(BedrockKnowledgeBaseTool);
     registry.register(TranslationTool);
     return registry;
 }
