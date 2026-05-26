@@ -127,5 +127,5 @@ Think of it like a phone call:
 - **Smart person** = Nova Sonic AI
 - **Their mouth** = AI speech output
 - **Your ear** = Browser speakers
-
+ 
 The "operator" (server) connects you to the "smart person" (AI), and you have a real-time conversation!
