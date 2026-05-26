@@ -1,0 +1,99 @@
+Bedrock Knowledge Base Integration - Notes
+===========================================
+
+CURRENT STATE
+- Local JSON file (data/knowledge-base/index.json) with 30 FAQ entries
+- Keyword-based search with weighted scoring (title, tags, category, content)
+- 5 categories: outage, service, connection, payment, meter
+- No AWS dependencies today
+
+
+CHALLENGES
+-----------
+
+1. Document Preparation
+   - Bedrock KB needs documents in S3 with metadata sidecar files
+   - Each FAQ entry needs a .txt file + a .metadata.json file
+   - Metadata must include category, tags, title for filtering to work
+   - Without proper metadata, you only get raw text back (no structured fields)
+
+2. Type Mismatch
+   - src/types/knowledge.ts defines categories as 'policies', 'procedures', 'faq', etc.
+   - Actual data uses 'outage', 'service', 'connection', 'payment', 'meter'
+   - Need to fix the TypeScript types before or during integration
+
+3. Response Mapping
+   - Bedrock returns: content text, score, S3 location, metadata
+   - App expects: KnowledgeBaseEntry with id, title, content, category, tags, source
+   - Need a mapping layer to transform Bedrock results into the existing shape
+
+4. Latency
+   - Current: near-zero (local file read with in-memory cache)
+   - Bedrock: 200-500ms per query (network call)
+   - Matters for voice/contact center where response time is critical
+
+5. Cost
+   - Embedding (one-time per sync)
+   - Vector store hosting (ongoing, OpenSearch Serverless)
+   - Per-query retrieval charges
+   - For 30 entries it's overkill; makes sense at scale (hundreds+ docs)
+
+6. AWS Credentials (IGNORE FOR NOW)
+   - App currently has zero AWS dependencies
+   - Need IAM credentials at runtime (env vars, instance profile, or SDK chain)
+   - Deployment/infrastructure change required
+
+7. Availability
+   - If Bedrock is unreachable, KB is completely down
+   - Consider keeping local JSON as fallback
+
+
+HOW TO IMPLEMENT
+-----------------
+
+Step 1: Prepare S3 Documents
+   - Create an S3 bucket for the knowledge base source
+   - For each FAQ entry, create:
+       outage-001.txt  (contains the answer text)
+       outage-001.metadata.json  (contains: { "metadataAttributes": { "category": "outage", "title": "...", "tags": [...] } })
+   - Upload all files to S3
+
+Step 2: Create Bedrock Knowledge Base
+   - Go to Amazon Bedrock console > Knowledge Bases > Create
+   - Select the S3 bucket as data source
+   - Choose an embedding model (e.g., Titan Embeddings V2)
+   - Choose vector store (OpenSearch Serverless is simplest to start)
+   - Sync the data source
+
+Step 3: Install SDK
+   - npm install @aws-sdk/client-bedrock-agent-runtime
+
+Step 4: Update KnowledgeBaseService
+   - Replace the local file search with Bedrock Retrieve API call
+   - Use RetrieveCommand with knowledgeBaseId and retrievalQuery
+   - Map response.retrievalResults back to KnowledgeBaseEntry shape
+   - Use vectorSearchConfiguration.filter for category filtering
+
+Step 5: Update Config
+   - Add knowledgeBaseId to src/config/knowledge-base.ts
+   - Add AWS region config
+   - Optionally keep local fallback settings
+
+Step 6: Fix Types
+   - Update KnowledgeCategory in src/types/knowledge.ts to include
+     'outage' | 'service' | 'connection' | 'payment' | 'meter'
+
+Step 7: Test
+   - Verify category filtering works via metadata
+   - Check latency is acceptable for the use case
+   - Confirm score/ranking quality vs the old keyword approach
+
+
+DECISION POINT
+--------------
+For 30 FAQ entries, the local JSON approach is fine. Bedrock KB becomes
+worth it when:
+- You have 100+ documents
+- You need semantic understanding (not just keyword matching)
+- Content changes frequently and you want managed sync
+- You want to add PDFs, web pages, or other unstructured sources

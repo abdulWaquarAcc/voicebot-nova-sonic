@@ -1,0 +1,1314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AWS Connect + Nova Sonic · Spanish↔English Voice Pipeline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0a0c10;
+        --surface: #111318;
+        --surface2: #181c24;
+        --border: #1e2430;
+        --accent: #00d4ff;
+        --accent2: #ff6b35;
+        --accent3: #7c3aed;
+        --green: #00e5a0;
+        --text: #e8edf5;
+        --muted: #6b7a94;
+        --mono: 'Space Mono', monospace;
+        --sans: sans-serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* animated bg */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(ellipse 80% 50% at 20% 20%, rgba(0, 212, 255, 0.04) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124, 58, 237, 0.05) 0%, transparent 60%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ── HEADER ── */
+      header {
+        padding: 56px 0 40px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 56px;
+      }
+      .tag {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        color: var(--accent);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        padding: 4px 12px;
+        border-radius: 2px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+      }
+      h1 span {
+        color: var(--accent);
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 1rem;
+        max-width: 560px;
+        line-height: 1.6;
+        font-weight: 400;
+      }
+
+      /* ── DECISION CARDS ── */
+      .decisions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 56px;
+      }
+      @media (max-width: 640px) {
+        .decisions {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .decision-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 24px;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+      .decision-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--accent), var(--accent3));
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .decision-card:hover {
+        border-color: rgba(0, 212, 255, 0.3);
+        transform: translateY(-2px);
+      }
+      .decision-card:hover::before {
+        opacity: 1;
+      }
+      .decision-card.active {
+        border-color: var(--accent);
+      }
+      .decision-card.active::before {
+        opacity: 1;
+      }
+
+      .dc-label {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .dc-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .dc-desc {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.5;
+        font-weight: 400;
+      }
+      .dc-badge {
+        display: inline-block;
+        font-family: var(--mono);
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 2px;
+        margin-top: 12px;
+      }
+      .badge-rec {
+        background: rgba(0, 229, 160, 0.12);
+        color: var(--green);
+      }
+      .badge-adv {
+        background: rgba(255, 107, 53, 0.12);
+        color: var(--accent2);
+      }
+
+      /* ── SECTION HEADERS ── */
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .section-num {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--accent);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        padding: 4px 10px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .section-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+      }
+
+      /* ── PIPELINE DIAGRAM ── */
+      .pipeline-section {
+        margin-bottom: 56px;
+      }
+
+      .pipeline {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+      }
+
+      .pipe-step {
+        display: flex;
+        align-items: stretch;
+        gap: 0;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .pipe-step:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 47px;
+        top: 80px;
+        width: 2px;
+        height: calc(100% - 12px);
+        background: linear-gradient(180deg, var(--border), transparent);
+        z-index: 0;
+      }
+
+      .pipe-step.active .pipe-card {
+        border-color: var(--accent);
+      }
+      .pipe-step.active .pipe-icon {
+        border-color: var(--accent);
+        background: rgba(0, 212, 255, 0.08);
+      }
+      .pipe-step.active .pipe-icon svg {
+        stroke: var(--accent);
+      }
+
+      .pipe-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 96px;
+        flex-shrink: 0;
+        padding: 20px 0 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .pipe-icon {
+        width: 56px;
+        height: 56px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        flex-shrink: 0;
+      }
+      .pipe-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--muted);
+        fill: none;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: stroke 0.2s;
+      }
+
+      .pipe-card {
+        flex: 1;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 20px 24px;
+        margin: 12px 0;
+        transition: border-color 0.2s;
+      }
+      .pipe-card:hover {
+        border-color: rgba(0, 212, 255, 0.2);
+      }
+
+      .pipe-service {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .pipe-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .pipe-desc {
+        font-size: 0.84rem;
+        color: var(--muted);
+        line-height: 1.55;
+        font-weight: 400;
+      }
+
+      .pipe-detail {
+        display: none;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .pipe-step.active .pipe-detail {
+        display: block;
+      }
+
+      .config-block {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 16px;
+        font-family: var(--mono);
+        font-size: 12px;
+        line-height: 1.7;
+        color: #a8b5cc;
+        overflow-x: auto;
+      }
+      .config-block .key {
+        color: #7c9cbf;
+      }
+      .config-block .val {
+        color: var(--green);
+      }
+      .config-block .comment {
+        color: #3d4f6e;
+      }
+
+      /* arrow between steps */
+      .pipe-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 96px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+      .pipe-arrow svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--muted);
+      }
+
+      /* ── OPTIONS TABS ── */
+      .options-section {
+        margin-bottom: 56px;
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+      }
+      .tab {
+        font-family: var(--mono);
+        font-size: 12px;
+        padding: 8px 18px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: transparent;
+        color: var(--muted);
+      }
+      .tab:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .tab.active {
+        border-color: var(--accent);
+        background: rgba(0, 212, 255, 0.08);
+        color: var(--accent);
+      }
+
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+
+      /* ── CODE BLOCKS ── */
+      .code-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 16px;
+      }
+      .code-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface2);
+      }
+      .code-lang {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .code-file {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--accent2);
+      }
+      pre {
+        padding: 20px;
+        font-family: var(--mono);
+        font-size: 12.5px;
+        line-height: 1.75;
+        overflow-x: auto;
+        color: #c9d4e8;
+      }
+      .kw {
+        color: #7c9cef;
+      }
+      .fn {
+        color: #f8c967;
+      }
+      .str {
+        color: var(--green);
+      }
+      .cm {
+        color: #3d4f6e;
+      }
+      .num {
+        color: var(--accent2);
+      }
+      .cls {
+        color: var(--accent);
+      }
+
+      /* ── SERVICES TABLE ── */
+      .services-section {
+        margin-bottom: 56px;
+      }
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+      }
+      .service-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .service-item:hover {
+        border-color: rgba(0, 212, 255, 0.25);
+        transform: translateY(-2px);
+      }
+      .si-icon {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+      .si-name {
+        font-size: 0.9rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .si-role {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-weight: 400;
+        line-height: 1.4;
+      }
+
+      /* ── CHECKLIST ── */
+      .checklist {
+        list-style: none;
+      }
+      .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+      .checklist li:last-child {
+        border-bottom: none;
+      }
+      .check-box {
+        width: 20px;
+        height: 20px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        flex-shrink: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2px;
+        transition: all 0.15s;
+      }
+      .check-box.done {
+        background: var(--green);
+        border-color: var(--green);
+      }
+      .check-box.done::after {
+        content: '✓';
+        font-size: 12px;
+        color: #000;
+        font-weight: 700;
+      }
+      .check-text {
+        flex: 1;
+      }
+      .check-text strong {
+        font-weight: 700;
+        display: block;
+        margin-bottom: 2px;
+      }
+      .check-text span {
+        color: var(--muted);
+        font-weight: 400;
+        font-size: 0.83rem;
+      }
+
+      /* ── DECISION MATRIX ── */
+      .matrix {
+        margin-bottom: 56px;
+      }
+      .matrix-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 640px) {
+        .matrix-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .matrix-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 24px;
+      }
+      .matrix-card h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      .matrix-card h4 span {
+        color: var(--accent);
+      }
+      .matrix-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.84rem;
+      }
+      .matrix-row:last-child {
+        border: none;
+      }
+      .matrix-label {
+        color: var(--muted);
+      }
+      .matrix-val {
+        font-weight: 700;
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+      .val-good {
+        color: var(--green);
+      }
+      .val-mid {
+        color: var(--accent2);
+      }
+      .val-bad {
+        color: #ff4d6d;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 32px 0;
+        margin-top: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: gap;
+        gap: 16px;
+      }
+      .footer-note {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .footer-accent {
+        color: var(--accent);
+      }
+
+      /* ── HIGHLIGHT BAND ── */
+      .highlight-band {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(124, 58, 237, 0.06));
+        border: 1px solid rgba(0, 212, 255, 0.15);
+        border-radius: 8px;
+        padding: 20px 24px;
+        margin-bottom: 40px;
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .hb-icon {
+        font-size: 1.3rem;
+        flex-shrink: 0;
+      }
+      .hb-text {
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .hb-text strong {
+        font-weight: 700;
+      }
+      .hb-text span {
+        color: var(--muted);
+      }
+
+      /* scroll reveal */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .reveal {
+        animation: fadeUp 0.5s ease both;
+      }
+      .reveal-1 {
+        animation-delay: 0.05s;
+      }
+      .reveal-2 {
+        animation-delay: 0.1s;
+      }
+      .reveal-3 {
+        animation-delay: 0.15s;
+      }
+      .reveal-4 {
+        animation-delay: 0.2s;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- HEADER -->
+      <header class="reveal">
+        <div class="tag">Architecture Guide</div>
+        <h1>AWS Connect + <span>Nova Sonic</span><br />Voice Translation Pipeline</h1>
+        <p class="subtitle">Real-time Spanish → English speech translation so your AI agent hears the caller in English — with optional English → Spanish response back.</p>
+      </header>
+
+      <!-- DECISION CARDS -->
+      <div class="reveal reveal-1">
+        <div class="section-header">
+          <span class="section-num">DECIDE FIRST</span>
+          <span class="section-title">Two Key Architecture Choices</span>
+        </div>
+        <div class="highlight-band">
+          <div class="hb-icon">💡</div>
+          <div class="hb-text">
+            <strong>Click a card to learn more.</strong>
+            <span> Your answers to these two questions determine which implementation path to follow. Scroll down for a full comparison matrix.</span>
+          </div>
+        </div>
+        <div class="decisions">
+          <div class="decision-card" onclick="toggleCard(this)">
+            <div class="dc-label">Choice 1 · Nova Sonic Integration</div>
+            <div class="dc-title">Option A — Amazon Bedrock (nova-sonic)</div>
+            <div class="dc-desc">Invoke Nova Sonic via the Bedrock API inside a Lambda function. Clean, fully managed, no infrastructure.</div>
+            <div class="dc-badge badge-rec">✓ Recommended</div>
+            <div class="pipe-detail" style="display: none">
+              <div class="config-block">
+                <span class="comment"># Bedrock model ID</span><br />
+                <span class="key">model_id</span> = <span class="val">"amazon.nova-sonic-v1:0"</span><br />
+                <span class="comment"># Invoke via boto3</span><br />
+                <span class="key">bedrock_rt</span>.converse(<span class="key">modelId</span>=model_id, ...)
+              </div>
+            </div>
+          </div>
+          <div class="decision-card" onclick="toggleCard(this)">
+            <div class="dc-label">Choice 1 · Nova Sonic Integration</div>
+            <div class="dc-title">Option B — Self-hosted / Custom Nova Sonic</div>
+            <div class="dc-desc">Nova Sonic runs on your own infra. Lambda calls your internal HTTP endpoint instead of Bedrock.</div>
+            <div class="dc-badge badge-adv">Advanced</div>
+            <div class="pipe-detail" style="display: none">
+              <div class="config-block">
+                <span class="comment"># Call your internal endpoint</span><br />
+                <span class="key">NOVA_SONIC_URL</span> = <span class="val">"https://your-host/v1/chat"</span><br />
+                <span class="key">headers</span> = {<span class="val">"Authorization"</span>: <span class="val">"Bearer ..."</span>}
+              </div>
+            </div>
+          </div>
+          <div class="decision-card" onclick="toggleCard(this)">
+            <div class="dc-label">Choice 2 · Response Direction</div>
+            <div class="dc-title">One-way: Spanish In, English Out</div>
+            <div class="dc-desc">Caller speaks Spanish → agent hears English. Agent responds in English (no translation back). Simpler setup.</div>
+            <div class="dc-badge badge-rec">Simpler</div>
+            <div class="pipe-detail" style="display: none">
+              <div class="config-block">
+                <span class="comment"># Flow</span><br />
+                Spanish Audio → Transcribe (es)<br />
+                → Translate (es→en) → Nova Sonic<br />
+                → English Response (no TTS back)
+              </div>
+            </div>
+          </div>
+          <div class="decision-card" onclick="toggleCard(this)">
+            <div class="dc-label">Choice 2 · Response Direction</div>
+            <div class="dc-title">Two-way: Full Bidirectional Translation</div>
+            <div class="dc-desc">Caller speaks Spanish → agent hears English → agent responds → response translated back → Polly speaks Spanish to caller.</div>
+            <div class="dc-badge badge-adv">Full UX</div>
+            <div class="pipe-detail" style="display: none">
+              <div class="config-block">
+                <span class="comment"># Full round-trip</span><br />
+                Spanish Audio → Transcribe (es)<br />
+                → Translate (es→en) → Nova Sonic<br />
+                → Translate (en→es) → Polly (es)<br />
+                → Spanish Audio back to caller
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIPELINE -->
+      <div class="pipeline-section reveal reveal-2">
+        <div class="section-header">
+          <span class="section-num">01</span>
+          <span class="section-title">Full Pipeline — Step by Step</span>
+        </div>
+        <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 28px; font-weight: 400">Click any step to expand its configuration details.</p>
+
+        <div class="pipeline" id="pipeline">
+          <div class="pipe-step" onclick="activateStep(this)">
+            <div class="pipe-left">
+              <div class="pipe-icon">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" /></svg>
+              </div>
+            </div>
+            <div class="pipe-card">
+              <div class="pipe-service">AWS Connect</div>
+              <div class="pipe-title">1 · Caller Dials In (Spanish)</div>
+              <div class="pipe-desc">AWS Connect receives the inbound call. A Contact Flow is triggered. Audio streaming begins via the Connect media pipeline.</div>
+              <div class="pipe-detail">
+                <div class="config-block">
+                  <span class="comment"># Contact Flow setup</span><br />
+                  <span class="key">Phone Number</span>: Claim in Connect console<br />
+                  <span class="key">Contact Flow</span>: Set language prompt → Spanish<br />
+                  <span class="key">Invoke Lambda</span>: Set at "Get Customer Input" block<br />
+                  <span class="key">Lex Bot Language</span>: <span class="val">es_US</span> or <span class="val">es_419</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipe-step" onclick="activateStep(this)">
+            <div class="pipe-left">
+              <div class="pipe-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
+                  <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8" />
+                </svg>
+              </div>
+            </div>
+            <div class="pipe-card">
+              <div class="pipe-service">Amazon Transcribe</div>
+              <div class="pipe-title">2 · Speech-to-Text (Spanish)</div>
+              <div class="pipe-desc">Transcribe Streaming converts Spanish audio to Spanish text in near real-time. Use the streaming API for low latency, or Lex for turn-based.</div>
+              <div class="pipe-detail">
+                <div class="config-block">
+                  <span class="comment"># Streaming Transcribe config</span><br />
+                  <span class="key">LanguageCode</span>: <span class="val">"es-US"</span> <span class="comment"># or es-ES</span><br />
+                  <span class="key">MediaSampleRateHertz</span>: <span class="num">8000</span> <span class="comment"># Connect uses 8kHz</span><br />
+                  <span class="key">MediaEncoding</span>: <span class="val">"pcm"</span><br />
+                  <span class="key">EnablePartialResultsStabilization</span>: <span class="val">True</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipe-step" onclick="activateStep(this)">
+            <div class="pipe-left">
+              <div class="pipe-icon">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
+                </svg>
+              </div>
+            </div>
+            <div class="pipe-card">
+              <div class="pipe-service">Amazon Translate</div>
+              <div class="pipe-title">3 · Translate Spanish → English</div>
+              <div class="pipe-desc">The Spanish transcript is sent to Amazon Translate. English text is returned. This is fast (&lt;50ms) and runs inside the Lambda function.</div>
+              <div class="pipe-detail">
+                <div class="config-block">
+                  <span class="comment"># boto3 translate call</span><br />
+                  translate = boto3.<span class="fn">client</span>(<span class="val">'translate'</span>)<br />
+                  result = translate.<span class="fn">translate_text</span>(<br />
+                  &nbsp;&nbsp;<span class="key">Text</span>=spanish_transcript,<br />
+                  &nbsp;&nbsp;<span class="key">SourceLanguageCode</span>=<span class="val">"es"</span>,<br />
+                  &nbsp;&nbsp;<span class="key">TargetLanguageCode</span>=<span class="val">"en"</span><br />
+                  )<br />
+                  english_text = result[<span class="val">'TranslatedText'</span>]
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipe-step" onclick="activateStep(this)">
+            <div class="pipe-left">
+              <div class="pipe-icon">
+                <svg viewBox="0 0 24 24">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <path d="M8 21h8M12 17v4" />
+                </svg>
+              </div>
+            </div>
+            <div class="pipe-card">
+              <div class="pipe-service">AWS Lambda</div>
+              <div class="pipe-title">4 · Lambda Orchestrator</div>
+              <div class="pipe-desc">Lambda is the central glue. It runs Transcribe → Translate → Nova Sonic in sequence and returns the result to Connect. Runs in &lt;3 seconds end-to-end.</div>
+              <div class="pipe-detail">
+                <div class="config-block">
+                  <span class="comment"># Lambda handler skeleton</span><br />
+                  <span class="kw">def</span> <span class="fn">handler</span>(event, context):<br />
+                  &nbsp;&nbsp;audio = event[<span class="val">'Details'</span>][<span class="val">'ContactData'</span>]<br />
+                  &nbsp;&nbsp;es_text = <span class="fn">transcribe</span>(audio) <span class="comment"># step 2</span><br />
+                  &nbsp;&nbsp;en_text = <span class="fn">translate</span>(es_text) <span class="comment"># step 3</span><br />
+                  &nbsp;&nbsp;response = <span class="fn">nova_sonic</span>(en_text) <span class="comment"># step 5</span><br />
+                  &nbsp;&nbsp;<span class="kw">return</span> {<span class="val">"response"</span>: response}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipe-step" onclick="activateStep(this)">
+            <div class="pipe-left">
+              <div class="pipe-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
+              </div>
+            </div>
+            <div class="pipe-card">
+              <div class="pipe-service">Amazon Nova Sonic · Bedrock</div>
+              <div class="pipe-title">5 · Agent Processes English Input</div>
+              <div class="pipe-desc">Nova Sonic receives clean English text and generates its response. From Nova Sonic's perspective it's a fully English conversation — no Spanish ever reaches it.</div>
+              <div class="pipe-detail">
+                <div class="config-block">
+                  <span class="comment"># Bedrock converse API</span><br />
+                  bedrock = boto3.<span class="fn">client</span>(<span class="val">'bedrock-runtime'</span>)<br />
+                  resp = bedrock.<span class="fn">converse</span>(<br />
+                  &nbsp;&nbsp;<span class="key">modelId</span>=<span class="val">"amazon.nova-sonic-v1:0"</span>,<br />
+                  &nbsp;&nbsp;<span class="key">messages</span>=[{<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"role"</span>: <span class="val">"user"</span>,<br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"content"</span>: [{<span class="val">"text"</span>: en_text}]<br />
+                  &nbsp;&nbsp;}]<br />
+                  )
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipe-step" onclick="activateStep(this)">
+            <div class="pipe-left">
+              <div class="pipe-icon">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" />
+                </svg>
+              </div>
+            </div>
+            <div class="pipe-card">
+              <div class="pipe-service">Amazon Translate · Optional</div>
+              <div class="pipe-title">6 · Translate English Response → Spanish</div>
+              <div class="pipe-desc">Optional (bidirectional mode). Translate Nova Sonic's English response back to Spanish before speaking it to the caller.</div>
+              <div class="pipe-detail">
+                <div class="config-block">
+                  <span class="comment"># Reverse translate</span><br />
+                  result = translate.<span class="fn">translate_text</span>(<br />
+                  &nbsp;&nbsp;<span class="key">Text</span>=nova_english_response,<br />
+                  &nbsp;&nbsp;<span class="key">SourceLanguageCode</span>=<span class="val">"en"</span>,<br />
+                  &nbsp;&nbsp;<span class="key">TargetLanguageCode</span>=<span class="val">"es"</span><br />
+                  )<br />
+                  spanish_response = result[<span class="val">'TranslatedText'</span>]
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pipe-step" onclick="activateStep(this)">
+            <div class="pipe-left">
+              <div class="pipe-icon">
+                <svg viewBox="0 0 24 24">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                  <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" />
+                </svg>
+              </div>
+            </div>
+            <div class="pipe-card">
+              <div class="pipe-service">Amazon Polly · Optional</div>
+              <div class="pipe-title">7 · Text-to-Speech in Spanish</div>
+              <div class="pipe-desc">Optional. Amazon Polly synthesizes the Spanish text into audio that Connect plays back to the caller. Use voice <code style="color: var(--accent2)">Lupe</code> (US Spanish) or <code style="color: var(--accent2)">Conchita</code> (ES Spanish).</div>
+              <div class="pipe-detail">
+                <div class="config-block">
+                  <span class="comment"># Polly synthesis</span><br />
+                  polly = boto3.<span class="fn">client</span>(<span class="val">'polly'</span>)<br />
+                  audio = polly.<span class="fn">synthesize_speech</span>(<br />
+                  &nbsp;&nbsp;<span class="key">Text</span>=spanish_response,<br />
+                  &nbsp;&nbsp;<span class="key">OutputFormat</span>=<span class="val">"mp3"</span>,<br />
+                  &nbsp;&nbsp;<span class="key">VoiceId</span>=<span class="val">"Lupe"</span>, <span class="comment"># es-US</span><br />
+                  &nbsp;&nbsp;<span class="key">LanguageCode</span>=<span class="val">"es-US"</span><br />
+                  )
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMPLEMENTATION TABS -->
+      <div class="options-section reveal reveal-3">
+        <div class="section-header">
+          <span class="section-num">02</span>
+          <span class="section-title">Implementation Code</span>
+        </div>
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('lambda')">Lambda (Python)</button>
+          <button class="tab" onclick="switchTab('iam')">IAM Permissions</button>
+          <button class="tab" onclick="switchTab('connect')">Connect Flow Setup</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-lambda">
+          <div class="code-wrap">
+            <div class="code-header">
+              <span class="code-lang">Python 3.12</span>
+              <span class="code-file">lambda_function.py</span>
+            </div>
+            <pre><span class="kw">import</span> boto3
+<span class="kw">import</span> json
+
+<span class="comment"># AWS clients</span>
+transcribe = boto3.<span class="fn">client</span>(<span class="str">'transcribe'</span>)
+translate  = boto3.<span class="fn">client</span>(<span class="str">'translate'</span>)
+bedrock    = boto3.<span class="fn">client</span>(<span class="str">'bedrock-runtime'</span>)
+polly      = boto3.<span class="fn">client</span>(<span class="str">'polly'</span>)
+
+<span class="comment"># ── STEP 2: Spanish audio → Spanish text ────────────────────</span>
+<span class="kw">def</span> <span class="fn">transcribe_spanish</span>(audio_s3_uri: str) -> str:
+    <span class="comment">"""
+    For streaming (real-time), use amazon-transcribe-streaming-sdk.
+    For turn-based (Contact Flow Lambda), use a pre-recorded S3 URI.
+    """</span>
+    job_name = <span class="str">f"connect-es-</span>{<span class="fn">uuid4</span>()}<span class="str">"</span>
+    transcribe.<span class="fn">start_transcription_job</span>(
+        TranscriptionJobName=job_name,
+        Media={<span class="str">"MediaFileUri"</span>: audio_s3_uri},
+        MediaFormat=<span class="str">"wav"</span>,
+        LanguageCode=<span class="str">"es-US"</span>,
+    )
+    <span class="comment"># Wait for job (use Step Functions for async in prod)</span>
+    <span class="kw">while</span> <span class="cls">True</span>:
+        result = transcribe.<span class="fn">get_transcription_job</span>(TranscriptionJobName=job_name)
+        status = result[<span class="str">"TranscriptionJob"</span>][<span class="str">"TranscriptionJobStatus"</span>]
+        <span class="kw">if</span> status <span class="kw">in</span> [<span class="str">"COMPLETED"</span>, <span class="str">"FAILED"</span>]: <span class="kw">break</span>
+    transcript_uri = result[<span class="str">"TranscriptionJob"</span>][<span class="str">"Transcript"</span>][<span class="str">"TranscriptFileUri"</span>]
+    <span class="kw">return</span> <span class="fn">fetch_transcript</span>(transcript_uri)
+
+<span class="comment"># ── STEP 3: Spanish text → English text ─────────────────────</span>
+<span class="kw">def</span> <span class="fn">translate_to_english</span>(spanish_text: str) -> str:
+    result = translate.<span class="fn">translate_text</span>(
+        Text=spanish_text,
+        SourceLanguageCode=<span class="str">"es"</span>,
+        TargetLanguageCode=<span class="str">"en"</span>,
+    )
+    <span class="kw">return</span> result[<span class="str">"TranslatedText"</span>]
+
+<span class="comment"># ── STEP 5: English text → Nova Sonic → English response ─────</span>
+<span class="kw">def</span> <span class="fn">call_nova_sonic</span>(english_text: str, conversation_history: list) -> str:
+    messages = conversation_history + [{
+        <span class="str">"role"</span>: <span class="str">"user"</span>,
+        <span class="str">"content"</span>: [{<span class="str">"text"</span>: english_text}]
+    }]
+    response = bedrock.<span class="fn">converse</span>(
+        modelId=<span class="str">"amazon.nova-sonic-v1:0"</span>,
+        system=[{<span class="str">"text"</span>: <span class="str">"You are a helpful agent. Always respond in English."</span>}],
+        messages=messages,
+    )
+    <span class="kw">return</span> response[<span class="str">"output"</span>][<span class="str">"message"</span>][<span class="str">"content"</span>][<span class="num">0</span>][<span class="str">"text"</span>]
+
+<span class="comment"># ── STEP 6 (optional): English response → Spanish ────────────</span>
+<span class="kw">def</span> <span class="fn">translate_to_spanish</span>(english_text: str) -> str:
+    result = translate.<span class="fn">translate_text</span>(
+        Text=english_text,
+        SourceLanguageCode=<span class="str">"en"</span>,
+        TargetLanguageCode=<span class="str">"es"</span>,
+    )
+    <span class="kw">return</span> result[<span class="str">"TranslatedText"</span>]
+
+<span class="comment"># ── STEP 7 (optional): Spanish text → Polly audio ───────────</span>
+<span class="kw">def</span> <span class="fn">synthesize_spanish</span>(spanish_text: str) -> bytes:
+    response = polly.<span class="fn">synthesize_speech</span>(
+        Text=spanish_text,
+        OutputFormat=<span class="str">"mp3"</span>,
+        VoiceId=<span class="str">"Lupe"</span>,         <span class="comment"># es-US female</span>
+        LanguageCode=<span class="str">"es-US"</span>,
+    )
+    <span class="kw">return</span> response[<span class="str">"AudioStream"</span>].<span class="fn">read</span>()
+
+<span class="comment"># ── MAIN HANDLER ────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">handler</span>(event, context):
+    <span class="comment"># Connect passes transcript via Lex or Parameters</span>
+    spanish_text = event[<span class="str">"Details"</span>][<span class="str">"Parameters"</span>].get(<span class="str">"TranscribedText"</span>, <span class="str">""</span>)
+    history      = <span class="fn">load_history</span>(event)  <span class="comment"># DynamoDB or session attr</span>
+
+    <span class="comment"># Translate to English</span>
+    english_text     = <span class="fn">translate_to_english</span>(spanish_text)
+
+    <span class="comment"># Nova Sonic hears English</span>
+    english_response = <span class="fn">call_nova_sonic</span>(english_text, history)
+
+    <span class="comment"># (Optional) Translate response back to Spanish</span>
+    spanish_response = <span class="fn">translate_to_spanish</span>(english_response)
+
+    <span class="comment"># Return to Connect (will use Polly or SSML to speak)</span>
+    <span class="kw">return</span> {
+        <span class="str">"EnglishResponse"</span>: english_response,
+        <span class="str">"SpanishResponse"</span>: spanish_response,
+    }</pre>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-iam">
+          <div class="code-wrap">
+            <div class="code-header">
+              <span class="code-lang">JSON</span>
+              <span class="code-file">lambda-execution-role-policy.json</span>
+            </div>
+            <pre>{
+  <span class="key">"Version"</span>: <span class="str">"2012-10-17"</span>,
+  <span class="key">"Statement"</span>: [
+    {
+      <span class="key">"Effect"</span>: <span class="str">"Allow"</span>,
+      <span class="key">"Action"</span>: [
+        <span class="comment">// Amazon Transcribe</span>
+        <span class="str">"transcribe:StartTranscriptionJob"</span>,
+        <span class="str">"transcribe:GetTranscriptionJob"</span>,
+        <span class="str">"transcribe:StartStreamTranscription"</span>,
+
+        <span class="comment">// Amazon Translate</span>
+        <span class="str">"translate:TranslateText"</span>,
+
+        <span class="comment">// Amazon Bedrock (Nova Sonic)</span>
+        <span class="str">"bedrock:InvokeModel"</span>,
+        <span class="str">"bedrock:Converse"</span>,
+
+        <span class="comment">// Amazon Polly (TTS back to Spanish)</span>
+        <span class="str">"polly:SynthesizeSpeech"</span>,
+
+        <span class="comment">// S3 (for Transcribe audio input)</span>
+        <span class="str">"s3:GetObject"</span>,
+        <span class="str">"s3:PutObject"</span>,
+
+        <span class="comment">// DynamoDB (conversation history)</span>
+        <span class="str">"dynamodb:GetItem"</span>,
+        <span class="str">"dynamodb:PutItem"</span>,
+
+        <span class="comment">// CloudWatch Logs</span>
+        <span class="str">"logs:CreateLogGroup"</span>,
+        <span class="str">"logs:CreateLogStream"</span>,
+        <span class="str">"logs:PutLogEvents"</span>
+      ],
+      <span class="key">"Resource"</span>: <span class="str">"*"</span>
+    }
+  ]
+}</pre>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-connect">
+          <div class="code-wrap">
+            <div class="code-header">
+              <span class="code-lang">Contact Flow Steps</span>
+              <span class="code-file">AWS Connect Console</span>
+            </div>
+            <pre><span class="comment">──────────────────────────────────────────────────────</span>
+<span class="cls">CONTACT FLOW SETUP (in AWS Connect Console)</span>
+<span class="comment">──────────────────────────────────────────────────────</span>
+
+<span class="kw">Block 1:</span> Set Voice
+  └─ Language: <span class="str">Spanish (US)</span> — es-US
+  └─ Voice: Lupe (Polly Neural)
+
+<span class="kw">Block 2:</span> Play Prompt
+  └─ "Hola, ¿cómo puedo ayudarte hoy?"
+
+<span class="kw">Block 3:</span> Get Customer Input
+  └─ Mode: <span class="str">Amazon Lex</span>
+  └─ Lex Bot: YourBot (language: es_US)
+  └─ Intent captures: FreeformText slot
+
+  <span class="comment">-- OR use "Store Customer Input" block --</span>
+
+  └─ Mode: <span class="str">DTMF / Speech</span>
+  └─ Set session attribute:
+       TranscribedText = $.Lex.IntentName
+
+<span class="kw">Block 4:</span> Invoke AWS Lambda Function
+  └─ Function ARN: arn:aws:lambda:...:translate-agent
+  └─ Send session attributes: <span class="val">True</span>
+  └─ Timeout: <span class="num">8</span> seconds
+
+<span class="kw">Block 5:</span> Play Prompt (SSML)
+  └─ Use attribute: $.External.SpanishResponse
+  └─ Voice: Lupe / Conchita
+
+<span class="kw">Block 6:</span> Loop back to Block 3
+  └─ (Repeat for multi-turn conversation)
+
+<span class="kw">Block 7:</span> Disconnect / Transfer
+  └─ On silence / goodbye intent
+<span class="comment">──────────────────────────────────────────────────────</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPARISON MATRIX -->
+      <div class="matrix reveal reveal-4">
+        <div class="section-header">
+          <span class="section-num">03</span>
+          <span class="section-title">Approach Comparison</span>
+        </div>
+        <div class="matrix-grid">
+          <div class="matrix-card">
+            <h4>Option A — <span>Bedrock Nova Sonic</span></h4>
+            <div class="matrix-row"><span class="matrix-label">Setup complexity</span><span class="matrix-val val-good">LOW</span></div>
+            <div class="matrix-row"><span class="matrix-label">Infrastructure</span><span class="matrix-val val-good">None (fully managed)</span></div>
+            <div class="matrix-row"><span class="matrix-label">Latency</span><span class="matrix-val val-good">~1–2s</span></div>
+            <div class="matrix-row"><span class="matrix-label">Billing</span><span class="matrix-val val-mid">Per-token (Bedrock)</span></div>
+            <div class="matrix-row"><span class="matrix-label">Customization</span><span class="matrix-val val-mid">Medium (system prompt)</span></div>
+            <div class="matrix-row"><span class="matrix-label">Recommended?</span><span class="matrix-val val-good">✓ YES</span></div>
+          </div>
+          <div class="matrix-card">
+            <h4>Option B — <span>Self-hosted Sonic</span></h4>
+            <div class="matrix-row"><span class="matrix-label">Setup complexity</span><span class="matrix-val val-bad">HIGH</span></div>
+            <div class="matrix-row"><span class="matrix-label">Infrastructure</span><span class="matrix-val val-bad">EC2 / ECS needed</span></div>
+            <div class="matrix-row"><span class="matrix-label">Latency</span><span class="matrix-val val-mid">~1–3s (depends on host)</span></div>
+            <div class="matrix-row"><span class="matrix-label">Billing</span><span class="matrix-val val-mid">Instance cost</span></div>
+            <div class="matrix-row"><span class="matrix-label">Customization</span><span class="matrix-val val-good">Full control</span></div>
+            <div class="matrix-row"><span class="matrix-label">Recommended?</span><span class="matrix-val val-mid">Only if needed</span></div>
+          </div>
+          <div class="matrix-card">
+            <h4>One-way <span>Translation</span></h4>
+            <div class="matrix-row"><span class="matrix-label">Caller experience</span><span class="matrix-val val-mid">Speaks Spanish, hears English agent</span></div>
+            <div class="matrix-row"><span class="matrix-label">Lambda calls</span><span class="matrix-val val-good">2 (Transcribe + Translate)</span></div>
+            <div class="matrix-row"><span class="matrix-label">Polly needed?</span><span class="matrix-val val-good">No</span></div>
+            <div class="matrix-row"><span class="matrix-label">Cost</span><span class="matrix-val val-good">Lower</span></div>
+            <div class="matrix-row"><span class="matrix-label">Use case</span><span class="matrix-val val-mid">Internal / agent assist</span></div>
+          </div>
+          <div class="matrix-card">
+            <h4>Bidirectional <span>Translation</span></h4>
+            <div class="matrix-row"><span class="matrix-label">Caller experience</span><span class="matrix-val val-good">Speaks & hears Spanish</span></div>
+            <div class="matrix-row"><span class="matrix-label">Lambda calls</span><span class="matrix-val val-mid">4 (+ Translate back + Polly)</span></div>
+            <div class="matrix-row"><span class="matrix-label">Polly needed?</span><span class="matrix-val val-mid">Yes</span></div>
+            <div class="matrix-row"><span class="matrix-label">Cost</span><span class="matrix-val val-mid">Moderate</span></div>
+            <div class="matrix-row"><span class="matrix-label">Use case</span><span class="matrix-val val-good">Customer-facing IVR</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="services-section reveal">
+        <div class="section-header">
+          <span class="section-num">04</span>
+          <span class="section-title">AWS Services Used</span>
+        </div>
+        <div class="services-grid">
+          <div class="service-item">
+            <div class="si-icon">📞</div>
+            <div class="si-name">AWS Connect</div>
+            <div class="si-role">Telephony, Contact Flows, audio streaming</div>
+          </div>
+          <div class="service-item">
+            <div class="si-icon">🎙️</div>
+            <div class="si-name">Amazon Transcribe</div>
+            <div class="si-role">Spanish speech → Spanish text (es-US or es-ES)</div>
+          </div>
+          <div class="service-item">
+            <div class="si-icon">🌐</div>
+            <div class="si-name">Amazon Translate</div>
+            <div class="si-role">es→en and en→es text translation</div>
+          </div>
+          <div class="service-item">
+            <div class="si-icon">🤖</div>
+            <div class="si-name">Amazon Bedrock</div>
+            <div class="si-role">Hosts Nova Sonic model, Converse API</div>
+          </div>
+          <div class="service-item">
+            <div class="si-icon">🔊</div>
+            <div class="si-name">Amazon Polly</div>
+            <div class="si-role">English response → Spanish audio (Lupe voice)</div>
+          </div>
+          <div class="service-item">
+            <div class="si-icon">⚡</div>
+            <div class="si-name">AWS Lambda</div>
+            <div class="si-role">Orchestration glue between all services</div>
+          </div>
+          <div class="service-item">
+            <div class="si-icon">🗄️</div>
+            <div class="si-name">DynamoDB</div>
+            <div class="si-role">Store conversation history per caller</div>
+          </div>
+          <div class="service-item">
+            <div class="si-icon">🔒</div>
+            <div class="si-name">IAM</div>
+            <div class="si-role">Least-privilege roles for Lambda execution</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETUP CHECKLIST -->
+      <div class="reveal" style="margin-bottom: 56px">
+        <div class="section-header">
+          <span class="section-num">05</span>
+          <span class="section-title">Setup Checklist</span>
+        </div>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px">
+          <ul class="checklist" id="checklist">
+            <li>
+              <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-text"><strong>Enable Nova Sonic in Amazon Bedrock</strong><span>Bedrock Console → Model Access → Request access to amazon.nova-sonic-v1:0</span></div>
+            </li>
+            <li>
+              <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-text"><strong>Create Lambda function (Python 3.12+)</strong><span>Attach execution role with Transcribe, Translate, Bedrock, Polly, DynamoDB permissions</span></div>
+            </li>
+            <li>
+              <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-text"><strong>Claim a phone number in AWS Connect</strong><span>Connect Console → Phone Numbers → Claim → assign to Contact Flow</span></div>
+            </li>
+            <li>
+              <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-text"><strong>Create Contact Flow with Spanish voice</strong><span>Set Lex bot language to es_US, invoke Lambda on each turn</span></div>
+            </li>
+            <li>
+              <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-text"><strong>Create DynamoDB table for history</strong><span>Table: ConversationHistory, PK: contactId (String)</span></div>
+            </li>
+            <li>
+              <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-text"><strong>Test with a Spanish call</strong><span>Call the number, speak Spanish, verify Lambda logs in CloudWatch</span></div>
+            </li>
+            <li>
+              <div class="check-box" onclick="toggleCheck(this)"></div>
+              <div class="check-text"><strong>(Optional) Enable Polly Spanish TTS</strong><span>Add synthesize_spanish() to Lambda and wire response audio back in Connect</span></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <footer>
+        <span class="footer-note"><span class="footer-accent">AWS Connect</span> + <span class="footer-accent">Nova Sonic</span> · Spanish↔English Pipeline</span>
+        <span class="footer-note">Click any pipeline step to expand config · Click checklist items to mark complete</span>
+      </footer>
+    </div>
+
+    <script>
+      function activateStep(el) {
+        document.querySelectorAll('.pipe-step').forEach((s) => s.classList.remove('active'));
+        el.classList.toggle('active');
+      }
+
+      function toggleCard(el) {
+        const detail = el.querySelector('.pipe-detail');
+        const isOpen = detail.style.display === 'block';
+        el.classList.toggle('active', !isOpen);
+        detail.style.display = isOpen ? 'none' : 'block';
+      }
+
+      function switchTab(id) {
+        document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        event.target.classList.add('active');
+      }
+
+      function toggleCheck(box) {
+        box.classList.toggle('done');
+      }
+    </script>
+  </body>
+</html>

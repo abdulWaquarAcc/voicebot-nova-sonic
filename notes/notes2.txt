@@ -1,0 +1,56 @@
+172.31.13.228
+
+
+EC2 Instance Connect
+
+SSM Session Manager
+
+SSH client
+
+EC2 serial console
+Instance ID
+
+i-060e6429d6e42f46b (lp_nextgen_ccs_nova2sonic)
+Connection type
+Connect using a Public IP
+Connect using a public IPv4 or IPv6 address
+Connect using a Private IP
+Connect using a private IP address and a VPC endpoint
+Private IPv4 address
+172.31.13.228
+IPv6 address
+–
+EC2 Instance Connect Endpoint
+Only endpoints that have completed the creation process can be selected. The process can take up to 15 minutes. If you create an endpoint, refresh this list to check if its in the available state.
+
+eice-0dbcec4a95089811b (create-complete)
+
+Username
+Enter the username defined in the AMI used to launch the instance. If you didn't define a custom username, use the default username, ec2-user.
+ec2-user
+
+Max tunnel duration (seconds)
+The maximum allowed duration of the SSH connection. Must comply with the maxTunnelDuration condition (if specified) in the IAM policy.
+3600
+Min 1 second. Max 3600 seconds (1 hour).
+
+
+
+ssh -i "lp_nextgen_ccs_nova2sonic.pem" ec2-user@172.31.13.228
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+git clone https://github.com/abdulWaquarAcc/voicebot-nova-sonic.git ~/app

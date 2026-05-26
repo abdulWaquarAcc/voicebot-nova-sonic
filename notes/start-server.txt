@@ -1,0 +1,52 @@
+
+## Windows ##
+npm run build
+set HOST=0.0.0.0
+set AWS_REGION=us-east-1
+npm start
+
+## Linux ##
+export HOST=0.0.0.0
+export AWS_REGION=us-east-1
+npm start
+
+
+
+
+
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+ping -c 2 google.com
+
+npm run build && HOST=0.0.0.0 PORT=3000 pm2 start dist/server.js --name voicebot
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------
+------------------------------------------
+------------------------------------------
+------------------------------------------
+
+
+
+export HOST=0.0.0.0
+export AWS_REGION=us-east-1
+npm start
+
+
+HOST=0.0.0.0 PORT=3000 npm start
+
+
+
+echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
+ping -c 2 google.com
+
+npm run build && HOST=0.0.0.0 PORT=3000 pm2 start dist/server.js --name voicebot
