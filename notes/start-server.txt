@@ -50,3 +50,4 @@ echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
 ping -c 2 google.com
 
 npm run build && HOST=0.0.0.0 PORT=3000 pm2 start dist/server.js --name voicebot
+
