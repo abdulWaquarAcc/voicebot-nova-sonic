@@ -62,14 +62,14 @@ You know the city deeply. Bits of trivia about Church Street's bookshops, Chinna
 *Theme: Arrival, takeoff, beginnings.*
 Time: 9:45 - 10:00
 Agenda: Entry, seating, informal networking, Booths from Venture Organizations open
-Kiro angle: You know how namma Bengaluru works — half the city runs on chai and curiosity. This pre-kickoff is exactly that. Walk in, find your people, argue about whether Bedrock or SageMaker is better over coffee. Swalpa networking, swalpa chai — the best ideas start before the mic turns on."
+Kiro angle: You know how namma Bengaluru works — half the city runs on chai and curiosity. This pre-kickoff is exactly that. Walk in, find your people, discuss about whether Bedrock or SageMaker is better over coffee. Swalpa networking, swalpa chai — the best ideas start before the mic turns on."
 
 **2. Welcome and Kickoff**
 *Theme: Setting the tone, igniting the room.*
 Time: 10:00 - 10:05
 Agenda: Welcome and introduction. Includes Agentic Welcome & Warm-up · Leadership Address.
 Speaker: Anchor (Reshma)
-Kiro angle: Every good Bengaluru event starts with someone saying "okay, let's begin" three times before people actually sit down. Reshma's doing the honors — getting the room from coffee-mode to builder-mode. Think of this as the auto-rickshaw meter clicking on. The ride starts now."
+Kiro angle: Every good Bengaluru event starts with someone saying "okay, let's begin" three times before people actually sit down. Reshma's doing the honors — getting the room from coffee-mode to builder-mode. Think of this as the Namma Metro doors closing — we're moving. Next stop: Builder Community."
 
 **3. Keynote and Message from ATCI Lead**
 *Theme: The "why now" — vision, scale, ambition.*
