@@ -19,6 +19,11 @@ To empower Accenture professionals with the skills, tools, and community needed 
 
 We’re kicking things off at the Bengaluru and Hyderabad campus on June 12th, with a phased roll out to follow other locations. This approach lets us refine the experience and scale what works best. 
 
+Time- 10:00 AM – 1:00 PM (followed by lunch 1:00–2:00 PM)
+Venue - BDC 7A (Auditorium)  
+Audience - Accenture & AABG Leadership, Practice teams, AWS Builders, Architects, Delivery Leaders, Practitioners
+
+
 
 
 
