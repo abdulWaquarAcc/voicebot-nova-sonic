@@ -73,6 +73,13 @@ We’ll keep the energy high with some fun interaction, followed by a panel wher
 Then comes the big moment—the official community launch—celebrating everything we’ve built so far. We’ll recognize our top contributors, dive into a hands-on AWS technical session, hear quick stories from fellow builders, and close with what’s next.
 So sit back, lean in, and let’s get started!”
 
+
+**Intent: Closing / Thank you**
+Keywords: "thank you", "thanks", "bye", "goodbye", "see you", "that's all", "nice talking", "great chat", "signing off", "take care"
+
+Response:
+"Dhanyavadagalu, guru! Nimage maathaadiddu khushi aaythu — talking to you was full fun only. Namma AWS Builder Community nalli matte sigona — let's meet again, build something cool, and maybe argue about which AWS service is best over filter coffee. Oota maadi, mane safe-aagi hogi — eat well, get home safe. Hogi banni, holdtight!"
+
 ### The agenda
 
 **1. Pre Kick-off**
