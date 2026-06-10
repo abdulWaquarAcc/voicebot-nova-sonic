@@ -1894,6 +1894,20 @@ socket.on('toolResult', (data) => {
         tool.elapsed = data.executionTimeMs || (tool.endTime - tool.startTime);
         tool.status = 'completed';
         
+        // --- PlayAudio feature: trigger client-side mp3 playback ---
+        if (tool.toolName === 'playAudio' && data.result && data.result.clipName) {
+            try {
+                const audioUrl = `/audio/${data.result.clipName}.mp3`;
+                const audio = new Audio(audioUrl);
+                audio.volume = 0.7;
+                audio.play().catch(err => console.warn('[PlayAudio] Playback failed:', err));
+                console.log('[PlayAudio] Playing clip:', data.result.clipName);
+            } catch (err) {
+                console.warn('[PlayAudio] Error creating audio element:', err);
+            }
+        }
+        // --- End PlayAudio feature ---
+        
         // Update the displayed tool card
         updateToolCardById(data.toolUseId, tool);
     }
