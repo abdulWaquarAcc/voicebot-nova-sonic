@@ -1144,6 +1144,27 @@ function base64ToFloat32Array(base64String) {
     }
 }
 
+// --- PlayAudio feature: client-side trigger phrase detection ---
+let playAudioTriggered = false; // Prevent multiple plays per turn
+
+function checkAndPlayAudio(text) {
+    if (playAudioTriggered) return;
+    const lowerText = text.toLowerCase();
+    // Trigger phrase that Un-nah says before the song plays
+    if (lowerText.includes('playing namma flame future')) {
+        playAudioTriggered = true;
+        try {
+            const audio = new Audio('/audio/namma_flame_future.mp3');
+            audio.volume = 0.7;
+            audio.play().catch(err => console.warn('[PlayAudio] Playback failed:', err));
+            console.log('[PlayAudio] Trigger phrase detected, playing namma_flame_future');
+        } catch (err) {
+            console.warn('[PlayAudio] Error creating audio element:', err);
+        }
+    }
+}
+// --- End PlayAudio feature ---
+
 function handleTextOutput(data) {
     if (data.content) {
         const messageData = {
@@ -1151,6 +1172,12 @@ function handleTextOutput(data) {
             message: data.content
         };
         chatHistoryManager.addTextMessage(messageData);
+
+        // --- PlayAudio feature: check assistant text for trigger phrase ---
+        if (data.role === 'ASSISTANT') {
+            checkAndPlayAudio(data.content);
+        }
+        // --- End PlayAudio trigger check ---
     }
 }
 
@@ -1695,6 +1722,9 @@ socket.on('contentStart', (data) => {
         role = data.role;
         if (data.role === 'USER') {
             // Don't hide user thinking indicator here - wait for actual text
+            // --- PlayAudio feature: reset trigger flag for new turn ---
+            playAudioTriggered = false;
+            // --- End PlayAudio reset ---
         } else if (data.role === 'ASSISTANT') {
             hideAssistantThinkingIndicator();
             let isSpeculative = false;
@@ -1893,20 +1923,6 @@ socket.on('toolResult', (data) => {
         // Use server-provided execution time if available, otherwise calculate from client timestamps
         tool.elapsed = data.executionTimeMs || (tool.endTime - tool.startTime);
         tool.status = 'completed';
-        
-        // --- PlayAudio feature: trigger client-side mp3 playback ---
-        if (tool.toolName === 'playAudio' && data.result && data.result.clipName) {
-            try {
-                const audioUrl = `/audio/${data.result.clipName}.mp3`;
-                const audio = new Audio(audioUrl);
-                audio.volume = 0.7;
-                audio.play().catch(err => console.warn('[PlayAudio] Playback failed:', err));
-                console.log('[PlayAudio] Playing clip:', data.result.clipName);
-            } catch (err) {
-                console.warn('[PlayAudio] Error creating audio element:', err);
-            }
-        }
-        // --- End PlayAudio feature ---
         
         // Update the displayed tool card
         updateToolCardById(data.toolUseId, tool);

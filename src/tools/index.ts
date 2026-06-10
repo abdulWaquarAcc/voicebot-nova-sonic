@@ -12,7 +12,6 @@ export { TranscriptCorrectionTool } from './TranscriptCorrectionTool';
 export { KnowledgeBaseTool } from './KnowledgeBaseTool';
 // export { BedrockKnowledgeBaseTool } from './BedrockKnowledgeBaseTool';
 export { TranslationTool } from './TranslationTool';
-export { PlayAudioTool } from './PlayAudioTool';
 
 import { ToolRegistry } from './Tool';
 import { DateTimeTool } from './DateTimeTool';
@@ -24,7 +23,6 @@ import { TranscriptCorrectionTool } from './TranscriptCorrectionTool';
 import { KnowledgeBaseTool } from './KnowledgeBaseTool';
 // // import { BedrockKnowledgeBaseTool } from './BedrockKnowledgeBaseTool';
 import { TranslationTool } from './TranslationTool';
-import { PlayAudioTool } from './PlayAudioTool';
 
 /**
  * Creates a ToolRegistry with all default tools registered
@@ -40,6 +38,5 @@ export function createDefaultToolRegistry(): ToolRegistry {
     registry.register(KnowledgeBaseTool);
     // registry.register(BedrockKnowledgeBaseTool);
     registry.register(TranslationTool);
-    registry.register(PlayAudioTool);
     return registry;
 }
