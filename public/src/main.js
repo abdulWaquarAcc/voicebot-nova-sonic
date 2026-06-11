@@ -1165,6 +1165,25 @@ function checkAndPlayAudio(text) {
 }
 // --- End PlayAudio feature ---
 
+// --- PlayVideo feature: client-side trigger phrase detection ---
+let playVideoTriggered = false; // Prevent multiple plays per turn
+
+function checkAndPlayVideo(text) {
+    if (playVideoTriggered) return;
+    const lowerText = text.toLowerCase();
+    // Trigger phrase that Un-nah says before the video plays
+    if (lowerText.includes('playing namma flame future video')) {
+        playVideoTriggered = true;
+        try {
+            window.open('/video/namma_flame_future.mp4', '_blank');
+            console.log('[PlayVideo] Trigger phrase detected, opening namma_flame_future video');
+        } catch (err) {
+            console.warn('[PlayVideo] Error opening video:', err);
+        }
+    }
+}
+// --- End PlayVideo feature ---
+
 function handleTextOutput(data) {
     if (data.content) {
         const messageData = {
@@ -1173,11 +1192,12 @@ function handleTextOutput(data) {
         };
         chatHistoryManager.addTextMessage(messageData);
 
-        // --- PlayAudio feature: check assistant text for trigger phrase ---
+        // --- PlayAudio & PlayVideo feature: check assistant text for trigger phrases ---
         if (data.role === 'ASSISTANT') {
+            checkAndPlayVideo(data.content);
             checkAndPlayAudio(data.content);
         }
-        // --- End PlayAudio trigger check ---
+        // --- End PlayAudio & PlayVideo trigger check ---
     }
 }
 
@@ -1725,6 +1745,9 @@ socket.on('contentStart', (data) => {
             // --- PlayAudio feature: reset trigger flag for new turn ---
             playAudioTriggered = false;
             // --- End PlayAudio reset ---
+            // --- PlayVideo feature: reset trigger flag for new turn ---
+            playVideoTriggered = false;
+            // --- End PlayVideo reset ---
         } else if (data.role === 'ASSISTANT') {
             hideAssistantThinkingIndicator();
             let isSpeculative = false;
