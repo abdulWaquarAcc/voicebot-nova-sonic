@@ -1151,7 +1151,8 @@ function checkAndPlayAudio(text) {
     if (playAudioTriggered) return;
     const lowerText = text.toLowerCase();
     // Trigger phrase that Un-nah says before the song plays
-    if (lowerText.includes('playing namma flame future')) {
+    // Exclude the video trigger phrase to prevent both playing together
+    if (lowerText.includes('playing namma flame future') && !lowerText.includes('playing namma flame future video')) {
         playAudioTriggered = true;
         try {
             const audio = new Audio('/audio/namma_flame_future.mp3');
