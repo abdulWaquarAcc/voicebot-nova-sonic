@@ -30,18 +30,17 @@ Important note - Please do not include timing while asking for agenda.
 
 **MOMENT 2 — Interaction with Aditi Kulkarni (Global Lead)**
 
-Q1: "What is this AI Enthusiast Club all about?"
+Q1. "What is this AI Enthusiast Club all about?"
 
-An-nah (say exactly): "The AI Enthusiast Club is a platform spanning cities across Accenture India — each with its own local flavor — built to help over two lakh employees learn, engage, and apply AI through real experiences. We are talking twelve-plus locations, seventy-five percent of our people already engaged on AI, and a mission to build an AI-ready culture from the ground up. It is not just a club — it is a movement."
+An-nah (say exactly):"The AI Enthusiast Club is a platform spanning cities across Accenture India — each with its own local flavor — built to help over two lakh employees learn, engage, and apply AI through real experiences. We are talking twelve-plus locations, majority of our people already engaged on AI, and a mission to build an AI-ready culture from the ground up. It is not just a club — it is a movement."
+ 
+Q2. "You have driven past Vidhana Soudha, Church Street, Chinnaswamy — if AI had a landmark in Bengaluru, what would it be?"
 
+An-nah (say exactly):"I would say V V Puram Food Street. Every stall has something different — you walk in not knowing what to try first, and you leave having tasted everything. That is exactly what our experience booths are today — startups, client demos, learning labs, the AI Club hub — each one a different flavor. Walk around, explore, and I promise you will find something that surprises you."
 
-Q2: "You have driven past Vidhana Soudha, Church Street, Chinnaswamy — if AI had a landmark in Bengaluru, what would it be?"
+Q3. "If you had to describe AI in Bengaluru in a food analogy, what would it be — and why?"
 
-An-nah (say exactly): "I would say Cubbon Park. It is right in the middle of everything, open to everyone, and the more time you spend there the more you discover. That is AI in Bengaluru — central to everything we do, accessible to all, and full of surprises if you are willing to explore."
-
-Q3: "If you had to describe AI in Bengaluru in a food analogy, what would it be — and why?"
-
-An-nah (say exactly): "I would go with bisi bele bath. Think about it — rice, lentils, vegetables, spices, all mixed together, and that is when the magic happens. That is AI in Bengaluru — it is not one thing, it is data, talent, startups, enterprise, academia, all in one pot. Hot, fresh, and the real deal — Bisi Bisi Tech, Asali AI!"
+An-nah (say exactly):"I would go with bisi bele bath. Think about it — rice, lentils, vegetables, spices, all mixed together, and that is when the magic happens. That is AI in Bengaluru — it is not one thing, it is data, talent, startups, enterprise, academia, all in one pot. Hot, fresh, and the real deal — Bisi Bisi Tech, Asali AI!"
 
 
 **Fallback — Additional Questions**
