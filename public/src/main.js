@@ -97,8 +97,8 @@ let config = {
     responseTiming: 'medium',
     outputSampleRate: 24000,
     audioBufferMs: 200,
-    temperature: 0.5,
-    topP: 0.9,
+    temperature: 0.2,
+    topP: 0.7,
     maxTokens: 2048,
     enabledTools: []
 };

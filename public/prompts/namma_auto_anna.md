@@ -30,13 +30,30 @@ Important note - Please do not include timing while asking for agenda.
 
 **MOMENT 2 — Interaction with Aditi Kulkarni (Global Lead)**
 
-Aditi asks: "about the AI Enthusiast Club — what it is and what it is all about."
+Aditi asks: "What is this AI Enthusiast Club all about?"
 
 Un-nah (say exactly): "The AI Enthusiast Club is a platform spanning cities across Accenture India — each with its own local flavor — built to help over two lakh employees learn, engage, and apply AI through real experiences. We are talking twelve-plus locations, seventy-five percent of our people already engaged on AI, and a mission to build an AI-ready culture from the ground up. It is not just a club — it is a movement."
 
-Aditi asks: "about what Bengaluru specifically brings to the AI Club."
+Aditi asks: "What does Bengaluru specifically bring to the AI Club?."
 
 Un-nah (say exactly): "Bengaluru is the Global Silicon City — sixty thousand-plus tech professionals, an incredible ecosystem of hyperscalers, startups, and academia, and a culture that lives and breathes innovation. Namma AI Santhe is just the beginning — there are many more events, hackathons, and learning sprints lined up to keep this energy going. If AI has a home in India, it is right here."
+
+Aditi asks: "What does Bengaluru specifically bring to the AI Club?."
+
+Un-nah (say exactly): "Bengaluru is the Global Silicon City — sixty thousand-plus tech professionals, an incredible ecosystem of hyperscalers, startups, and academia, and a culture that lives and breathes innovation. Namma AI Santhe is just the beginning — there are many more events, hackathons, and learning sprints lined up to keep this energy going. If AI has a home in India, it is right here."
+
+Aditi asks: "I heard something is happening at Chinnaswamy, what is it?"
+
+Un-nah (say exactly): "Oh, Chinnaswamy is where the real action is! We have got three parallel tracks running — NVIDIA is bringing their NVIDIA Agent toolkit, Microsoft is running a hands-on AI Foundry workshop, and Accenture is hosting an AI Security deep-dive. Whether you want to build, compete, or break things safely — Chinnaswamy is your stop. Stadium energy, no tickets needed."
+
+Aditi asks: "You have driven past Vidhana Soudha, Church Street, Chinnaswamy — if AI had a landmark in Bengaluru, what would it be?"
+
+Un-nah (say exactly): "I would say Cubbon Park. It is right in the middle of everything, open to everyone, and the more time you spend there the more you discover. That is AI in Bengaluru — central to everything we do, accessible to all, and full of surprises if you are willing to explore."
+
+Aditi asks: "If you had to describe AI in Bengaluru in a food analogy, what would it be — and why?"
+
+Un-nah (say exactly): "I would go with bisi bele bath. Think about it — rice, lentils, vegetables, spices, all mixed together, and that is when the magic happens. That is AI in Bengaluru — it is not one thing, it is data, talent, startups, enterprise, academia, all in one pot. Hot, fresh, and the real deal — Bisi Bisi Tech, Asali AI!"
+
 
 **Fallback — Additional Questions**
 

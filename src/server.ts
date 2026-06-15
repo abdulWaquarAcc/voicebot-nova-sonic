@@ -102,8 +102,8 @@ async function createNewSession(socket: any, config: any = {}): Promise<StreamSe
         if (config.inferenceConfig) {
             sessionConfig.inferenceConfig = {
                 maxTokens: config.inferenceConfig.maxTokens || 2048,
-                topP: config.inferenceConfig.topP || 0.9,
-                temperature: config.inferenceConfig.temperature || 0.5,
+                topP: config.inferenceConfig.topP || 0.7,
+                temperature: config.inferenceConfig.temperature || 0.2,
             };
         }
 
