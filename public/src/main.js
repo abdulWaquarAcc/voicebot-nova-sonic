@@ -93,7 +93,7 @@ const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
 let config = {
     awsRegion: 'us-east-1',
     systemPrompt: '',
-    voiceId: 'tiffany',
+    voiceId: 'matthew',
     responseTiming: 'medium',
     outputSampleRate: 24000,
     audioBufferMs: 200,

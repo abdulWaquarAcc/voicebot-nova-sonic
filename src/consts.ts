@@ -61,7 +61,7 @@ export const DefaultAudioOutputConfiguration = {
   sampleRateHertz: 24000,
   sampleSizeBits: 16,
   channelCount: 1,
-  voiceId: "tiffany",
+  voiceId: "matthew",
   encoding: "base64",
   audioType: "SPEECH" as AudioType,
   bufferMs: 200,
